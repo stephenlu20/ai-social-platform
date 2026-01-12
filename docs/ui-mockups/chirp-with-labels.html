@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chirp - Beginner Friendly</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: linear-gradient(135deg, #0f0519 0%, #1a0a2e 50%, #16213e 100%);
+            color: #fff; 
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            display: grid; 
+            grid-template-columns: 280px 1fr 380px;
+            gap: 20px;
+            padding: 0 20px;
+        }
+        
+        /* Help Tooltip System */
+        .help-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 800;
+            margin-left: 6px;
+            cursor: help;
+            position: relative;
+        }
+        .help-badge:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-5px);
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid rgba(255, 107, 157, 0.5);
+            padding: 12px 16px;
+            border-radius: 12px;
+            white-space: nowrap;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: rgba(255, 107, 157, 0.5);
+        }
+        
+        /* Feature Labels */
+        .feature-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), rgba(138, 43, 226, 0.2));
+            border: 1px solid rgba(255, 107, 157, 0.4);
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #ffa07a;
+        }
+        
+        /* Sidebar */
+        .sidebar { 
+            padding: 30px 0;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+        .logo { 
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 20px 50px;
+        }
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 50%, #ffa07a 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 8px 24px rgba(255, 107, 157, 0.3);
+            transform: rotate(-5deg);
+        }
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b9d, #ffa07a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+        .nav-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 16px; 
+            padding: 14px 20px; 
+            border-radius: 16px;
+            margin: 0 12px 8px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .nav-item:hover { 
+            background: rgba(255, 107, 157, 0.15);
+            transform: translateX(4px);
+        }
+        .nav-icon { 
+            width: 24px; 
+            height: 24px;
+            font-size: 22px;
+        }
+        .badge {
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: auto;
+        }
+        .ai-nav-item {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(255, 107, 157, 0.2));
+            border: 2px solid rgba(255, 107, 157, 0.3);
+            margin-top: 20px;
+        }
+        .post-btn { 
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            padding: 18px;
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 17px;
+            margin: 30px 12px 20px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255, 107, 157, 0.4);
+            position: relative;
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border-radius: 20px;
+            margin: 20px 12px 0;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+        .avatar { 
+            width: 44px; 
+            height: 44px; 
+            border-radius: 14px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .trust-score {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        /* Main Feed */
+        .main-feed { 
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .feed-header { 
+            display: flex;
+            position: sticky;
+            top: 0;
+            background: rgba(15, 5, 25, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 10;
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .tab { 
+            flex: 1; 
+            padding: 14px;
+            text-align: center;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            color: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-size: 15px;
+        }
+        .tab.active { 
+            color: #fff;
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), rgba(138, 43, 226, 0.2));
+        }
+        
+        /* Compose Box */
+        .compose-box {
+            padding: 20px;
+            display: flex;
+            gap: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        .compose-area { flex: 1; }
+        .compose-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            width: 100%;
+            min-height: 80px;
+            resize: none;
+            outline: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .char-counter {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+        }
+        .char-counter.warning { color: #fbbf24; }
+        .char-counter.danger { color: #ef4444; }
+        .compose-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .action-icons { 
+            display: flex; 
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .action-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 20px;
+            position: relative;
+        }
+        .action-icon:hover { 
+            background: rgba(255, 107, 157, 0.15);
+            transform: scale(1.1);
+        }
+        .post-btn-small {
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            padding: 10px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(255, 107, 157, 0.3);
+            font-size: 15px;
+        }
+        
+        /* Tweet */
+        .tweet {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            display: flex;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .tweet:hover { background: rgba(255, 107, 157, 0.05); }
+        .tweet-avatar { 
+            font-size: 36px; 
+            flex-shrink: 0;
+            position: relative;
+        }
+        .tweet-content { flex: 1; }
+        .tweet-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .tweet-author { 
+            font-weight: 700;
+            font-size: 15px;
+        }
+        .verified {
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #ff6b9d, #ffa07a);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+        .tweet-handle, .tweet-time { 
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+        .tweet-badge {
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .debate-badge {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.3));
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+        .poll-badge {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.3));
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #93c5fd;
+        }
+        .timed-badge {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.3));
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            color: #fcd34d;
+        }
+        .edited-badge {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .tweet-text {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin: 8px 0 16px;
+            white-space: pre-line;
+            font-size: 15px;
+        }
+        .hashtag {
+            color: #22d3ee;
+            font-weight: 600;
+        }
+        .mention {
+            color: #ff6b9d;
+            font-weight: 600;
+        }
+        
+        /* Poll */
+        .poll {
+            margin: 16px 0;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .poll-option {
+            padding: 14px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .poll-option:hover {
+            background: rgba(255, 107, 157, 0.1);
+        }
+        .poll-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 107, 157, 0.3), rgba(138, 43, 226, 0.3));
+            border-radius: 12px;
+            transition: width 0.5s ease;
+        }
+        .poll-text {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+        .poll-info {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 12px;
+        }
+        
+        /* Debate Section */
+        .debate-section {
+            margin: 16px 0;
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            border-radius: 16px;
+        }
+        .debate-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            color: #fca5a5;
+        }
+        .debate-stance {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .stance-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .stance-for {
+            background: rgba(34, 197, 94, 0.2);
+            border: 2px solid rgba(34, 197, 94, 0.4);
+            color: #86efac;
+        }
+        .stance-against {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+        
+        /* Tweet Actions */
+        .tweet-actions {
+            display: flex;
+            justify-content: space-between;
+            max-width: 500px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 12px;
+        }
+        .tweet-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 6px;
+            border-radius: 10px;
+            position: relative;
+        }
+        .tweet-action:hover {
+            color: #ff6b9d;
+            background: rgba(255, 107, 157, 0.1);
+        }
+        .tweet-action-icon { font-size: 18px; }
+        .tweet-action span {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .reaction-group {
+            display: flex;
+            gap: 4px;
+        }
+        .reaction {
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .reaction:hover {
+            background: rgba(255, 107, 157, 0.15);
+            transform: scale(1.1);
+        }
+        .reaction.active {
+            background: rgba(255, 107, 157, 0.2);
+            border: 1px solid rgba(255, 107, 157, 0.4);
+        }
+        
+        /* Right Sidebar */
+        .right-sidebar { padding: 30px 0; }
+        .search-box {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 30px;
+        }
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            width: 100%;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 15px;
+        }
+        
+        .widget {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .widget-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 800;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .widget-content { padding: 20px; }
+        
+        /* Info Banner */
+        .info-banner {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(138, 43, 226, 0.15));
+            border: 2px solid rgba(255, 107, 157, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 10px 12px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .info-banner strong {
+            color: #ffa07a;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        /* Labeled sections */
+        .section-label {
+            background: rgba(255, 107, 157, 0.1);
+            border-left: 4px solid #ff6b9d;
+            padding: 8px 12px;
+            margin: 10px 0;
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffa07a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">🎭</div>
+                <div class="logo-text">Chirp</div>
+            </div>
+            
+            <div class="section-label">📍 FEATURE #1 - USER PAGE</div>
+            
+            <nav>
+                <div class="nav-item">
+                    <div class="nav-icon">🏠</div>
+                    <div>Home</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">🌍</div>
+                    <div>Explore</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">💬</div>
+                    <div>Messages</div>
+                    <span class="badge">3</span>
+                    <span class="help-badge">2
+                        <div class="tooltip">Feature #2: Direct Messages & Groups</div>
+                    </span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">👥</div>
+                    <div>Groups</div>
+                    <span class="help-badge">17
+                        <div class="tooltip">Feature #17: Groups & Communities</div>
+                    </span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">⭐</div>
+                    <div>Bookmarks</div>
+                    <span class="help-badge">14
+                        <div class="tooltip">Feature #14: Bookmarks & Favorites</div>
+                    </span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">👤</div>
+                    <div>Profile</div>
+                    <span class="help-badge">1
+                        <div class="tooltip">Feature #1: Your User Page</div>
+                    </span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">🤝</div>
+                    <div>Friends</div>
+                    <span class="help-badge">15
+                        <div class="tooltip">Feature #15: Friends List</div>
+                    </span>
+                </div>
+                <div class="nav-item ai-nav-item">
+                    <div class="nav-icon">✨</div>
+                    <div style="font-weight: 700;">AI Studio</div>
+                </div>
+            </nav>
+            
+            <div class="info-banner">
+                <strong>💡 New User Tips:</strong>
+                Hover over the numbered badges to learn what each feature does!
+            </div>
+            
+            <div class="post-btn">
+                <span class="feature-label">Feature #3</span>
+                Create Post
+            </div>
+            
+            <div class="user-profile" style="position: relative;">
+                <div class="avatar">🎨</div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 700; font-size: 14px;">Your Name</div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                        <span style="font-size: 13px; color: rgba(255,255,255,0.5);">@yourhandle</span>
+                        <div class="trust-score">
+                            <span>🛡️</span>
+                            <span>92</span>
+                            <span class="help-badge" style="margin-left: 2px; background: rgba(255,255,255,0.2);">12
+                                <div class="tooltip">Feature #12: Trust Score - Build reputation!</div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Feed -->
+        <div class="main-feed">
+            <div class="feed-header">
+                <div class="tab active">For You</div>
+                <div class="tab">Following</div>
+                <div class="tab">Trending</div>
+            </div>
+            
+            <!-- Compose Box with Labels -->
+            <div class="compose-box">
+                <div class="avatar">🎨</div>
+                <div class="compose-area">
+                    <div class="section-label" style="margin: 0 0 12px 0;">🎯 CREATE A POST (Feature #3)</div>
+                    
+                    <!-- AI Features Panel -->
+                    <div style="margin-bottom: 16px; padding: 16px; background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(255, 107, 157, 0.1)); border: 2px solid rgba(255, 107, 157, 0.3); border-radius: 16px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                            <span style="font-size: 20px;">✨</span>
+                            <span style="font-weight: 700; color: #ffa07a; font-size: 14px;">AI WRITING TOOLS</span>
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            <button style="padding: 8px 14px; background: rgba(138, 43, 226, 0.3); border: 2px solid rgba(138, 43, 226, 0.5); border-radius: 10px; color: #b794f6; font-weight: 600; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+                                <span>🤖</span>
+                                <span>Post Assistant</span>
+                            </button>
+                            <button style="padding: 8px 14px; background: rgba(59, 130, 246, 0.3); border: 2px solid rgba(59, 130, 246, 0.5); border-radius: 10px; color: #93c5fd; font-weight: 600; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+                                <span>✅</span>
+                                <span>Fact Check</span>
+                                <label style="display: flex; align-items: center; gap: 4px; margin-left: 4px;">
+                                    <input type="checkbox" style="cursor: pointer;">
+                                    <span style="font-size: 11px;">Auto</span>
+                                </label>
+                            </button>
+                            <button style="padding: 8px 14px; background: rgba(34, 197, 94, 0.3); border: 2px solid rgba(34, 197, 94, 0.5); border-radius: 10px; color: #86efac; font-weight: 600; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+                                <span>🔍</span>
+                                <span>Fact Crawler</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <textarea class="compose-input" placeholder="What's on your mind?"></textarea>
+                    <div class="compose-actions">
+                        <div class="action-icons">
+                            <div class="action-icon" style="position: relative;">
+                                🖼️
+                                <span class="help-badge" style="position: absolute; top: -5px; right: -5px; width: 16px; height: 16px; font-size: 10px;">18
+                                    <div class="tooltip">Feature #18: Add Multimedia</div>
+                                </span>
+                            </div>
+                            <div class="action-icon" style="position: relative;">
+                                🎬
+                                <span class="help-badge" style="position: absolute; top: -5px; right: -5px; width: 16px; height: 16px; font-size: 10px;">18
+                                    <div class="tooltip">Feature #18: Add Video</div>
+                                </span>
+                            </div>
+                            <div class="action-icon" style="position: relative;">
+                                📊
+                                <span class="help-badge" style="position: absolute; top: -5px; right: -5px; width: 16px; height: 16px; font-size: 10px;">5
+                                    <div class="tooltip">Feature #5: Create Poll</div>
+                                </span>
+                            </div>
+                            <div class="action-icon" style="position: relative;">
+                                😊
+                                <span class="help-badge" style="position: absolute; top: -5px; right: -5px; width: 16px; height: 16px; font-size: 10px;">7
+                                    <div class="tooltip">Feature #7: Emoji Support</div>
+                                </span>
+                            </div>
+                            <div class="action-icon" style="position: relative;">
+                                #
+                                <span class="help-badge" style="position: absolute; top: -5px; right: -5px; width: 16px; height: 16px; font-size: 10px;">6
+                                    <div class="tooltip">Feature #6: Add Hashtag</div>
+                                </span>
+                            </div>
+                            <div class="action-icon" style="position: relative;">
+                                ⏰
+                                <span class="help-badge" style="position: absolute; top: -5px; right: -5px; width: 16px; height: 16px; font-size: 10px;">9
+                                    <div class="tooltip">Feature #9: Timed Messages</div>
+                                </span>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span class="char-counter">
+                                0/280
+                                <span class="help-badge" style="background: rgba(255,255,255,0.2);">4
+                                    <div class="tooltip">Feature #4: Character Limit</div>
+                                </span>
+                            </span>
+                            <div class="post-btn-small">Share</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="padding: 16px; background: rgba(255, 107, 157, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                <div style="font-size: 13px; font-weight: 700; color: #ffa07a; margin-bottom: 8px;">📚 EXPLORE FEATURES BELOW:</div>
+                <div style="font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.6;">
+                    Scroll down to see examples of <strong>Polls</strong> (Feature #5), <strong>Debates</strong> (Feature #11), <strong>Reactions</strong> (Feature #10), <strong>Edit</strong> (Feature #8), and more!
+                </div>
+            </div>
+            
+            <!-- Tweet with Poll -->
+            <div class="tweet">
+                <div class="tweet-avatar">👩‍💻</div>
+                <div class="tweet-content">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                        <div class="tweet-header">
+                            <span class="tweet-author">Emily Parker</span>
+                            <span class="verified">✓</span>
+                            <span class="tweet-handle">@emilyparker</span>
+                            <span class="tweet-time">· 1h</span>
+                            <span class="tweet-badge poll-badge">
+                                📊 POLL
+                                <span class="help-badge" style="background: rgba(255,255,255,0.3); margin-left: 4px;">5
+                                    <div class="tooltip">Feature #5: Interactive Polls</div>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="tweet-text">Which programming language should I learn next? <span class="hashtag">#WebDev</span> <span class="hashtag">#Coding</span></div>
+                    
+                    <div class="poll">
+                        <div class="poll-option">
+                            <div class="poll-bar" style="width: 45%;"></div>
+                            <div class="poll-text">
+                                <span>Solidity</span>
+                                <span>45%</span>
+                            </div>
+                        </div>
+                        <div class="poll-option">
+                            <div class="poll-bar" style="width: 30%;"></div>
+                            <div class="poll-text">
+                                <span>Rust</span>
+                                <span>30%</span>
+                            </div>
+                        </div>
+                        <div class="poll-info">
+                            1,247 votes · 2 days left
+                        </div>
+                    </div>
+                    
+                    <div class="tweet-actions">
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">💬</div>
+                            <span>89</span>
+                        </div>
+                        <div class="tweet-action" style="position: relative;">
+                            <div class="tweet-action-icon">🔁</div>
+                            <span>234</span>
+                            <span class="help-badge" style="position: absolute; top: -8px; right: -8px; width: 16px; height: 16px; font-size: 10px;">3
+                                <div class="tooltip">Feature #3: Repost</div>
+                            </span>
+                        </div>
+                        <div class="reaction-group" style="position: relative;">
+                            <div class="reaction">👍 142</div>
+                            <div class="reaction active">❤️ 567</div>
+                            <span class="help-badge" style="position: absolute; top: -8px; right: -8px; width: 16px; height: 16px; font-size: 10px;">10
+                                <div class="tooltip">Feature #10: Multiple Reactions</div>
+                            </span>
+                        </div>
+                        <div class="tweet-action" style="position: relative;">
+                            <div class="tweet-action-icon">✅</div>
+                            <span class="help-badge" style="position: absolute; top: -8px; right: -8px; width: 16px; height: 16px; font-size: 10px; background: linear-gradient(135deg, #10b981, #059669);">AI
+                                <div class="tooltip">AI: Fact Check This Post</div>
+                            </span>
+                        </div>
+                        <div class="tweet-action" style="position: relative;">
+                            <div class="tweet-action-icon">📄</div>
+                            <span class="help-badge" style="position: absolute; top: -8px; right: -8px; width: 16px; height: 16px; font-size: 10px; background: linear-gradient(135deg, #10b981, #059669);">AI
+                                <div class="tooltip">AI: Summarize Post</div>
+                            </span>
+                        </div>
+                        <div class="tweet-action" style="position: relative;">
+                            <div class="tweet-action-icon">🔖</div>
+                            <span class="help-badge" style="position: absolute; top: -8px; right: -8px; width: 16px; height: 16px; font-size: 10px;">14
+                                <div class="tooltip">Feature #14: Bookmark This</div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tweet with Debate Feature -->
+            <div class="tweet">
+                <div class="tweet-avatar">🧑‍⚖️</div>
+                <div class="tweet-content">
+                    <div class="tweet-header">
+                        <span class="tweet-author">Marcus Rivera</span>
+                        <span class="tweet-handle">@marcusrivera</span>
+                        <span class="tweet-time">· 3h</span>
+                        <span class="tweet-badge debate-badge">
+                            ⚔️ DEBATE
+                            <span class="help-badge" style="background: rgba(255,255,255,0.3); margin-left: 4px;">11
+                                <div class="tooltip">Feature #11: Debate Me!</div>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="tweet-text">Remote work is more productive than office work. Change my mind.</div>
+                    
+                    <div class="debate-section">
+                        <div class="debate-header">
+                            <span>⚔️</span>
+                            <span>JOIN THE DEBATE - Pick Your Side!</span>
+                        </div>
+                        <div class="debate-stance">
+                            <div class="stance-btn stance-for">
+                                <div>👍 I AGREE</div>
+                                <div style="font-size: 12px; margin-top: 4px;">724 people</div>
+                            </div>
+                            <div class="stance-btn stance-against">
+                                <div>👎 I DISAGREE</div>
+                                <div style="font-size: 12px; margin-top: 4px;">456 people</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tweet-actions">
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">💬</div>
+                            <span>312</span>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">🔁</div>
+                            <span>567</span>
+                        </div>
+                        <div class="reaction-group">
+                            <div class="reaction active">👍 89</div>
+                            <div class="reaction">👎 34</div>
+                            <div class="reaction">🤔 67</div>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">🔖</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tweet with Timed & Edited -->
+            <div class="tweet">
+                <div class="tweet-avatar">🚀</div>
+                <div class="tweet-content">
+                    <div class="tweet-header">
+                        <span class="tweet-author">Alex Chen</span>
+                        <span class="verified">✓</span>
+                        <span class="tweet-handle">@alexbuilds</span>
+                        <span class="tweet-time">· 5h</span>
+                        <span class="tweet-badge timed-badge">
+                            ⏰ 12h
+                            <span class="help-badge" style="background: rgba(255,255,255,0.3); margin-left: 4px;">9
+                                <div class="tooltip">Feature #9: Auto-deletes in 12 hours</div>
+                            </span>
+                        </span>
+                        <span class="tweet-badge edited-badge">
+                            ✏️ EDITED
+                            <span class="help-badge" style="background: rgba(255,255,255,0.3); margin-left: 4px;">8
+                                <div class="tooltip">Feature #8: Post was edited</div>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="tweet-text">🎉 FLASH SALE: 50% off! Code: LEARN50. <span class="hashtag">#LimitedTime</span></div>
+                    
+                    <div class="tweet-actions">
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">💬</div>
+                            <span>45</span>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">🔁</div>
+                            <span>892</span>
+                        </div>
+                        <div class="reaction-group">
+                            <div class="reaction">🔥 234</div>
+                            <div class="reaction">🎉 167</div>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">🔖</div>
+                            <span>567</span>
+                        </div>
+                        <div class="tweet-action" style="position: relative;">
+                            <div class="tweet-action-icon">✏️</div>
+                            <span class="help-badge" style="position: absolute; top: -8px; right: -8px; width: 16px; height: 16px; font-size: 10px;">8
+                                <div class="tooltip">Feature #8: Edit Post</div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AI Fact-Checked Tweet Example -->
+            <div class="tweet">
+                <div class="tweet-avatar">📰</div>
+                <div class="tweet-content">
+                    <div class="tweet-header">
+                        <span class="tweet-author">NewsDaily</span>
+                        <span class="verified">✓</span>
+                        <span class="tweet-handle">@newsdaily</span>
+                        <span class="tweet-time">· 2h</span>
+                    </div>
+                    <div class="tweet-text">Breaking: Scientists discover new renewable energy source that could power entire cities. Study published in Nature Journal. <span class="hashtag">#Science</span> <span class="hashtag">#Energy</span></div>
+                    
+                    <!-- AI Fact Check Result -->
+                    <div style="margin: 16px 0; padding: 14px; background: rgba(34, 197, 94, 0.1); border: 2px solid rgba(34, 197, 94, 0.4); border-radius: 14px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                            <span style="font-size: 20px;">✅</span>
+                            <span style="font-weight: 700; color: #86efac; font-size: 14px;">AI FACT CHECK: VERIFIED</span>
+                            <span class="help-badge" style="background: linear-gradient(135deg, #10b981, #059669); margin-left: auto;">AI
+                                <div class="tooltip">AI: Auto Fact-Checked</div>
+                            </span>
+                        </div>
+                        <div style="font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.5;">
+                            ✓ Source verified: Nature Journal<br>
+                            ✓ Study confirmed: Published Jan 2026<br>
+                            ✓ Authors credible: MIT Research Team<br>
+                            <button style="margin-top: 8px; padding: 6px 12px; background: rgba(34, 197, 94, 0.2); border: 1px solid rgba(34, 197, 94, 0.4); border-radius: 8px; color: #86efac; font-weight: 600; cursor: pointer; font-size: 12px;">View Sources</button>
+                        </div>
+                    </div>
+                    
+                    <div class="tweet-actions">
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">💬</div>
+                            <span>234</span>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">🔁</div>
+                            <span>1.2K</span>
+                        </div>
+                        <div class="reaction-group">
+                            <div class="reaction">👍 567</div>
+                            <div class="reaction active">🔥 892</div>
+                        </div>
+                        <div class="tweet-action" style="position: relative;">
+                            <div class="tweet-action-icon" style="color: #86efac;">✅</div>
+                            <span style="color: #86efac; font-weight: 700;">Verified</span>
+                            <span class="help-badge" style="background: linear-gradient(135deg, #10b981, #059669);">AI
+                                <div class="tooltip">AI: Fact Checked</div>
+                            </span>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">🔖</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <div class="search-box" style="position: relative;">
+                <div style="color: rgba(255,255,255,0.5); font-size: 20px;">🔍</div>
+                <input type="text" placeholder="Search posts, people, hashtags...">
+                <span class="help-badge" style="position: absolute; top: -10px; right: -10px;">13
+                    <div class="tooltip">Feature #13: Search Everything</div>
+                </span>
+            </div>
+            
+            <!-- AI Features Widget -->
+            <div class="widget" style="border: 2px solid rgba(138, 43, 226, 0.4); background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(255, 107, 157, 0.1));">
+                <div class="widget-header">
+                    <span>🤖</span>
+                    <span>AI Tools</span>
+                    <span class="help-badge" style="background: linear-gradient(135deg, #10b981, #059669);">AI
+                        <div class="tooltip">AI-Powered Features</div>
+                    </span>
+                </div>
+                <div class="widget-content">
+                    <div style="margin-bottom: 12px;">
+                        <button style="width: 100%; padding: 12px; background: rgba(138, 43, 226, 0.3); border: 2px solid rgba(138, 43, 226, 0.5); border-radius: 12px; color: #b794f6; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px; margin-bottom: 8px;">
+                            <span style="font-size: 20px;">🤖</span>
+                            <div style="flex: 1; text-align: left;">
+                                <div>Post Assistant</div>
+                                <div style="font-size: 11px; opacity: 0.7; font-weight: 500;">AI helps you write better</div>
+                            </div>
+                        </button>
+                        <button style="width: 100%; padding: 12px; background: rgba(59, 130, 246, 0.3); border: 2px solid rgba(59, 130, 246, 0.5); border-radius: 12px; color: #93c5fd; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px; margin-bottom: 8px;">
+                            <span style="font-size: 20px;">✅</span>
+                            <div style="flex: 1; text-align: left;">
+                                <div>Fact Checker</div>
+                                <div style="font-size: 11px; opacity: 0.7; font-weight: 500;">Verify claims automatically</div>
+                            </div>
+                        </button>
+                        <button style="width: 100%; padding: 12px; background: rgba(34, 197, 94, 0.3); border: 2px solid rgba(34, 197, 94, 0.5); border-radius: 12px; color: #86efac; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px; margin-bottom: 8px;">
+                            <span style="font-size: 20px;">🔍</span>
+                            <div style="flex: 1; text-align: left;">
+                                <div>Fact Crawler</div>
+                                <div style="font-size: 11px; opacity: 0.7; font-weight: 500;">Deep source verification</div>
+                            </div>
+                        </button>
+                        <button style="width: 100%; padding: 12px; background: rgba(245, 158, 11, 0.3); border: 2px solid rgba(245, 158, 11, 0.5); border-radius: 12px; color: #fcd34d; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px; margin-bottom: 8px;">
+                            <span style="font-size: 20px;">📄</span>
+                            <div style="flex: 1; text-align: left;">
+                                <div>Summary Bot</div>
+                                <div style="font-size: 11px; opacity: 0.7; font-weight: 500;">Summarize long threads</div>
+                            </div>
+                        </button>
+                        <button style="width: 100%; padding: 12px; background: rgba(239, 68, 68, 0.3); border: 2px solid rgba(239, 68, 68, 0.5); border-radius: 12px; color: #fca5a5; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px; margin-bottom: 8px;">
+                            <span style="font-size: 20px;">🛡️</span>
+                            <div style="flex: 1; text-align: left;">
+                                <div>Preemptive Block Bot</div>
+                                <div style="font-size: 11px; opacity: 0.7; font-weight: 500;">Block spam & bots</div>
+                            </div>
+                        </button>
+                        <button style="width: 100%; padding: 12px; background: rgba(168, 85, 247, 0.3); border: 2px solid rgba(168, 85, 247, 0.5); border-radius: 12px; color: #c084fc; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 14px;">
+                            <span style="font-size: 20px;">🔗</span>
+                            <div style="flex: 1; text-align: left;">
+                                <div>Link Article Bot</div>
+                                <div style="font-size: 11px; opacity: 0.7; font-weight: 500;">Auto-fetch article previews</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filter Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span>🎯</span>
+                    <span>Filters & Sort</span>
+                    <span class="help-badge">13
+                        <div class="tooltip">Feature #13: Filter & Sort Posts</div>
+                    </span>
+                </div>
+                <div class="widget-content">
+                    <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 12px;">
+                        <strong>Filter by type:</strong>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+                        <button style="padding: 8px 14px; background: rgba(255, 107, 157, 0.2); border: 2px solid rgba(255, 107, 157, 0.4); border-radius: 10px; color: #fff; font-weight: 600; cursor: pointer;">All</button>
+                        <button style="padding: 8px 14px; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #fff; font-weight: 600; cursor: pointer;">⚔️ Debates</button>
+                        <button style="padding: 8px 14px; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #fff; font-weight: 600; cursor: pointer;">📊 Polls</button>
+                    </div>
+                    <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 12px;">
+                        <strong>Sort by:</strong>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button style="padding: 8px 14px; background: rgba(255, 107, 157, 0.2); border: 2px solid rgba(255, 107, 157, 0.4); border-radius: 10px; color: #fff; font-weight: 600; cursor: pointer;">Latest</button>
+                        <button style="padding: 8px 14px; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #fff; font-weight: 600; cursor: pointer;">Popular</button>
+                        <button style="padding: 8px 14px; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #fff; font-weight: 600; cursor: pointer;">🛡️ Trust</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Friends Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span>🤝</span>
+                    <span>Friends Online</span>
+                    <span class="help-badge">15
+                        <div class="tooltip">Feature #15: Your Friends List</div>
+                    </span>
+                </div>
+                <div class="widget-content">
+                    <div style="padding: 12px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="font-size: 24px;">👤</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 700; font-size: 14px;">Jordan Rivers</div>
+                                <div style="font-size: 12px; color: rgba(255,255,255,0.5);">● Online now</div>
+                            </div>
+                            <button style="padding: 6px 12px; background: rgba(255, 107, 157, 0.3); border: none; border-radius: 8px; color: #fff; font-weight: 600; cursor: pointer;">DM</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Groups Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span>👥</span>
+                    <span>Your Groups</span>
+                    <span class="help-badge">17
+                        <div class="tooltip">Feature #17: Groups & Communities</div>
+                    </span>
+                </div>
+                <div class="widget-content">
+                    <div style="padding: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; margin-bottom: 12px; cursor: pointer;">
+                        <div style="font-weight: 700; margin-bottom: 4px;">🎨 Design Collective</div>
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.5);">1.2K members · 45 new posts</div>
+                    </div>
+                    <div style="padding: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; cursor: pointer;">
+                        <div style="font-weight: 700; margin-bottom: 4px;">💻 Dev Community</div>
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.5);">3.4K members · 127 new posts</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Access -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span>⭐</span>
+                    <span>Quick Access</span>
+                </div>
+                <div class="widget-content" style="font-size: 14px; line-height: 2;">
+                    <div style="display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 8px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,107,157,0.1)'" onmouseout="this.style.background='transparent'">
+                        <span>📑</span>
+                        <span>Saved Posts (23)</span>
+                        <span class="help-badge" style="margin-left: auto;">14
+                            <div class="tooltip">Feature #14: Bookmarks</div>
+                        </span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 8px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,107,157,0.1)'" onmouseout="this.style.background='transparent'">
+                        <span>⚔️</span>
+                        <span>Active Debates (5)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 8px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,107,157,0.1)'" onmouseout="this.style.background='transparent'">
+                        <span>📊</span>
+                        <span>Your Polls (8)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

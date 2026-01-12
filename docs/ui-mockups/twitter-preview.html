@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chirp - Your Social Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: linear-gradient(135deg, #0f0519 0%, #1a0a2e 50%, #16213e 100%);
+            color: #fff; 
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            display: grid; 
+            grid-template-columns: 280px 1fr 380px;
+            gap: 20px;
+            padding: 0 20px;
+        }
+        
+        /* Sidebar */
+        .sidebar { 
+            padding: 30px 0;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+        .logo { 
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 20px 50px;
+        }
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 50%, #ffa07a 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 8px 24px rgba(255, 107, 157, 0.3);
+            transform: rotate(-5deg);
+        }
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b9d, #ffa07a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+        .nav-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 16px; 
+            padding: 14px 20px; 
+            border-radius: 16px;
+            margin: 0 12px 8px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,107,157,0.1), transparent);
+            transition: left 0.5s;
+        }
+        .nav-item:hover::before {
+            left: 100%;
+        }
+        .nav-item:hover { 
+            background: rgba(255, 107, 157, 0.15);
+            transform: translateX(4px);
+        }
+        .nav-icon { 
+            width: 24px; 
+            height: 24px;
+            font-size: 22px;
+        }
+        .ai-nav-item {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(255, 107, 157, 0.2));
+            border: 2px solid rgba(255, 107, 157, 0.3);
+            margin-top: 20px;
+        }
+        .ai-nav-item:hover {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(255, 107, 157, 0.3));
+            border-color: rgba(255, 107, 157, 0.5);
+        }
+        .post-btn { 
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            padding: 18px;
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 17px;
+            margin: 30px 12px 20px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255, 107, 157, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .post-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .post-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        .post-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255, 107, 157, 0.5);
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border-radius: 20px;
+            margin: 20px 12px 0;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .user-profile:hover { 
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        .avatar { 
+            width: 44px; 
+            height: 44px; 
+            border-radius: 14px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        /* Main Feed */
+        .main-feed { 
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .feed-header { 
+            display: flex;
+            position: sticky;
+            top: 0;
+            background: rgba(15, 5, 25, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 10;
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .tab { 
+            flex: 1; 
+            padding: 14px;
+            text-align: center;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            color: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-size: 15px;
+        }
+        .tab:hover {
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .tab.active { 
+            color: #fff;
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), rgba(138, 43, 226, 0.2));
+        }
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b9d, #8a2be2);
+            border-radius: 4px;
+        }
+        
+        .compose-box {
+            padding: 20px;
+            display: flex;
+            gap: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .compose-area {
+            flex: 1;
+        }
+        .compose-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            width: 100%;
+            min-height: 80px;
+            resize: none;
+            outline: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .compose-input::placeholder { color: rgba(255, 255, 255, 0.3); }
+        .compose-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .action-icons {
+            display: flex;
+            gap: 4px;
+        }
+        .action-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 20px;
+        }
+        .action-icon:hover { 
+            background: rgba(255, 107, 157, 0.15);
+            transform: scale(1.1);
+        }
+        .action-icon-ai {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(255, 107, 157, 0.2));
+            border: 1px solid rgba(255, 107, 157, 0.3);
+        }
+        .action-icon-ai:hover {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(255, 107, 157, 0.3));
+        }
+        .post-btn-small {
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            padding: 10px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(255, 107, 157, 0.3);
+            transition: all 0.3s ease;
+            font-size: 15px;
+        }
+        .post-btn-small:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+        }
+        
+        /* AI Assist Panel */
+        .ai-panel {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.15), rgba(255, 107, 157, 0.15));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .ai-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 107, 157, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        .ai-title {
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b9d, #8a2be2, #ffa07a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .ai-sparkle {
+            font-size: 24px;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+        }
+        .ai-textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 107, 157, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            color: #fff;
+            min-height: 100px;
+            resize: none;
+            outline: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 15px;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        .ai-textarea:focus { 
+            border-color: #ff6b9d;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+        }
+        .ai-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .ai-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .ai-btn {
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .ai-btn:hover {
+            transform: translateY(-2px);
+        }
+        .ai-btn-primary {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.3), rgba(138, 43, 226, 0.3));
+            border-color: rgba(255, 107, 157, 0.4);
+            color: #ffa07a;
+        }
+        .ai-btn-primary:hover {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.4), rgba(138, 43, 226, 0.4));
+            box-shadow: 0 8px 20px rgba(255, 107, 157, 0.3);
+        }
+        .ai-btn-secondary {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(102, 126, 234, 0.3));
+            border-color: rgba(138, 43, 226, 0.4);
+            color: #b794f6;
+        }
+        .ai-btn-secondary:hover {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.4), rgba(102, 126, 234, 0.4));
+            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.3);
+        }
+        .ai-suggestion {
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(255, 107, 157, 0.1);
+            border: 2px solid rgba(255, 107, 157, 0.3);
+            border-radius: 16px;
+            display: flex;
+            gap: 12px;
+            font-size: 14px;
+            color: #ffd6e7;
+            position: relative;
+            z-index: 1;
+            line-height: 1.6;
+        }
+        
+        /* Tweet */
+        .tweet {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            display: flex;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .tweet:hover { 
+            background: rgba(255, 107, 157, 0.05);
+        }
+        .tweet-avatar { 
+            font-size: 36px; 
+            flex-shrink: 0;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+        .tweet-content { flex: 1; }
+        .tweet-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .tweet-author { 
+            font-weight: 700;
+            font-size: 15px;
+        }
+        .verified {
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #ff6b9d, #ffa07a);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+        .tweet-handle, .tweet-time { 
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+        .ai-badge {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(255, 107, 157, 0.3));
+            border: 1px solid rgba(255, 107, 157, 0.4);
+            color: #ffa07a;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tweet-text {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin: 8px 0 16px;
+            white-space: pre-line;
+            font-size: 15px;
+        }
+        .tweet-actions {
+            display: flex;
+            justify-content: space-between;
+            max-width: 450px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 12px;
+        }
+        .tweet-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 6px;
+            border-radius: 10px;
+        }
+        .tweet-action:hover {
+            color: #ff6b9d;
+            background: rgba(255, 107, 157, 0.1);
+        }
+        .tweet-action-icon {
+            font-size: 18px;
+        }
+        .tweet-action span {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        /* Right Sidebar */
+        .right-sidebar { padding: 30px 0; }
+        .search-box {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 30px;
+            transition: all 0.3s ease;
+        }
+        .search-box:focus-within {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #ff6b9d;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.2);
+        }
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            width: 100%;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 15px;
+        }
+        .search-box input::placeholder { color: rgba(255, 255, 255, 0.4); }
+        
+        .widget {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .widget:hover {
+            border-color: rgba(255, 107, 157, 0.3);
+            box-shadow: 0 8px 32px rgba(255, 107, 157, 0.1);
+        }
+        .widget-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 800;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .widget-content { padding: 20px; }
+        .trend-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            margin-bottom: 4px;
+        }
+        .trend-item:hover { 
+            background: rgba(255, 107, 157, 0.08);
+            transform: translateX(4px);
+        }
+        .trend-item:last-child { 
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .trend-category {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .trend-topic {
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+        .trend-count {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+        }
+        
+        .insight-card {
+            padding: 16px;
+            border-radius: 14px;
+            margin-bottom: 14px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .insight-card:hover {
+            transform: translateY(-2px);
+        }
+        .insight-card:last-child { margin-bottom: 0; }
+        .insight-primary {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(255, 160, 122, 0.15));
+            border-color: rgba(255, 107, 157, 0.3);
+        }
+        .insight-primary:hover {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), rgba(255, 160, 122, 0.2));
+            box-shadow: 0 8px 24px rgba(255, 107, 157, 0.2);
+        }
+        .insight-secondary {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.15), rgba(102, 126, 234, 0.15));
+            border-color: rgba(138, 43, 226, 0.3);
+        }
+        .insight-secondary:hover {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(102, 126, 234, 0.2));
+            box-shadow: 0 8px 24px rgba(138, 43, 226, 0.2);
+        }
+        .insight-label {
+            font-size: 10px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .insight-primary .insight-label { color: #ffa07a; }
+        .insight-secondary .insight-label { color: #b794f6; }
+        .insight-text { 
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            font-weight: 500;
+        }
+        
+        .follow-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding: 4px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .follow-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .follow-item:last-child { margin-bottom: 0; }
+        .follow-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .follow-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        .follow-name { 
+            font-weight: 700;
+            font-size: 15px;
+        }
+        .follow-handle { 
+            font-size: 13px; 
+            color: rgba(255, 255, 255, 0.5); 
+            font-weight: 500;
+        }
+        .follow-btn {
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+        }
+        .follow-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 107, 157, 0.4);
+        }
+        
+        .sparkle { 
+            font-size: 22px;
+            filter: drop-shadow(0 2px 8px rgba(255, 107, 157, 0.5));
+        }
+        .notification-dot {
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, #ff6b9d, #ffa07a);
+            border-radius: 50%;
+            position: absolute;
+            top: 14px;
+            left: 44px;
+            box-shadow: 0 0 10px rgba(255, 107, 157, 0.8);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">🎭</div>
+                <div class="logo-text">Chirp</div>
+            </div>
+            
+            <nav>
+                <div class="nav-item">
+                    <div class="nav-icon">🏠</div>
+                    <div>Home</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">🌍</div>
+                    <div>Explore</div>
+                </div>
+                <div class="nav-item" style="position: relative;">
+                    <div class="nav-icon">🔔</div>
+                    <div>Notifications</div>
+                    <div class="notification-dot"></div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">💬</div>
+                    <div>Messages</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">⭐</div>
+                    <div>Saved</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">👤</div>
+                    <div>Profile</div>
+                </div>
+                <div class="nav-item ai-nav-item">
+                    <div class="nav-icon">✨</div>
+                    <div style="font-weight: 700;">AI Studio</div>
+                </div>
+            </nav>
+            
+            <div class="post-btn">Create Post</div>
+            
+            <div class="user-profile">
+                <div class="avatar">🎨</div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 700; font-size: 14px;">Your Name</div>
+                    <div style="font-size: 13px; color: rgba(255,255,255,0.5);">@yourhandle</div>
+                </div>
+                <div style="color: rgba(255,255,255,0.5); font-size: 20px;">•••</div>
+            </div>
+        </div>
+        
+        <!-- Main Feed -->
+        <div class="main-feed">
+            <div class="feed-header">
+                <div class="tab active">For You</div>
+                <div class="tab">Following</div>
+                <div class="tab">Trending</div>
+            </div>
+            
+            <!-- AI Studio Panel -->
+            <div class="ai-panel">
+                <div class="ai-header">
+                    <div class="ai-sparkle">✨</div>
+                    <div class="ai-title">AI Writing Studio</div>
+                </div>
+                <textarea class="ai-textarea" placeholder="Start writing something amazing..."></textarea>
+                <div class="ai-buttons">
+                    <div class="ai-btn ai-btn-primary">
+                        <span>✨</span>
+                        <span>AI Enhance</span>
+                    </div>
+                    <div class="ai-btn ai-btn-secondary">
+                        <span>🎯</span>
+                        <span>Boost Reach</span>
+                    </div>
+                </div>
+                <div class="ai-suggestion">
+                    <div style="font-size: 20px;">💡</div>
+                    <div>Try adding a personal story to make your post more relatable and engaging!</div>
+                </div>
+            </div>
+            
+            <!-- Compose Box -->
+            <div class="compose-box">
+                <div class="avatar">🎨</div>
+                <div class="compose-area">
+                    <textarea class="compose-input" placeholder="What's on your mind?"></textarea>
+                    <div class="compose-actions">
+                        <div class="action-icons">
+                            <div class="action-icon">🖼️</div>
+                            <div class="action-icon">🎬</div>
+                            <div class="action-icon">😊</div>
+                            <div class="action-icon">📊</div>
+                            <div class="action-icon action-icon-ai">✨</div>
+                        </div>
+                        <div class="post-btn-small">Share</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tweets -->
+            <div class="tweet">
+                <div class="tweet-avatar">🎨</div>
+                <div class="tweet-content">
+                    <div class="tweet-header">
+                        <span class="tweet-author">Luna Martinez</span>
+                        <span class="verified">✓</span>
+                        <span class="tweet-handle">@lunadesigns</span>
+                        <span class="tweet-time">· 2h</span>
+                    </div>
+                    <div class="tweet-text">Just launched my AI-powered color harmony tool! 🎨 It analyzes emotions and suggests palettes that actually resonate with people. Beta testers are loving it!</div>
+                    <div class="tweet-actions">
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">💬</div>
+                            <span>48</span>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">🔁</div>
+                            <span>142</span>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">💖</div>
+                            <span>567</span>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">📊</div>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">🔗</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tweet">
+                <div class="tweet-avatar">🚀</div>
+                <div class="tweet-content">
+                    <div class="tweet-header">
+                        <span class="tweet-author">Alex Chen</span>
+                        <span class="tweet-handle">@alexbuilds</span>
+                        <span class="tweet-time">· 5h</span>
+                    </div>
+                    <div class="tweet-text">Hot take: The best products aren't built with the most features. They're built with the RIGHT features. Less is always more when it comes to UX. 
+
+Ship fast, iterate faster. 🎯</div>
+                    <div class="tweet-actions">
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">💬</div>
+                            <span>89</span>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">🔁</div>
+                            <span>321</span>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">💖</div>
+                            <span>1.2K</span>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">📊</div>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">🔗</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tweet">
+                <div class="tweet-avatar">🤖</div>
+                <div class="tweet-content">
+                    <div class="tweet-header">
+                        <span class="tweet-author">TechPulse AI</span>
+                        <span class="verified">✓</span>
+                        <span class="tweet-handle">@techpulse_ai</span>
+                        <span class="tweet-time">· 8h</span>
+                        <span class="ai-badge"><span style="font-size: 11px;">✨</span> AI Generated</span>
+                    </div>
+                    <div class="tweet-text">Today's Tech Trends Summary 🌐
+
+🔥 AI breakthroughs in natural language
+💻 New framework releases shaking up the dev world  
+🎮 Gaming tech hitting new performance peaks
+🔐 Cybersecurity innovations worth watching
+
+Analyzed from 2,847 trending sources</div>
+                    <div class="tweet-actions">
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">💬</div>
+                            <span>203</span>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">🔁</div>
+                            <span>678</span>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">💖</div>
+                            <span>1.5K</span>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">📊</div>
+                        </div>
+                        <div class="tweet-action">
+                            <div class="tweet-action-icon">🔗</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <div class="search-box">
+                <div style="color: rgba(255,255,255,0.5); font-size: 20px;">🔍</div>
+                <input type="text" placeholder="Search Chirp">
+            </div>
+            
+            <!-- AI Insights Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span class="sparkle">✨</span>
+                    <span>AI Insights</span>
+                </div>
+                <div class="widget-content">
+                    <div class="insight-card insight-primary">
+                        <div class="insight-label">Personalized Feed</div>
+                        <div class="insight-text">Your interests in Design, Tech, and AI mean you'll love these trending topics this week!</div>
+                    </div>
+                    <div class="insight-card insight-secondary">
+                        <div class="insight-label">Engagement Score</div>
+                        <div class="insight-text">Your posts are getting 85% positive vibes! Keep the great content coming 🎉</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Trends Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span style="font-size: 20px;">🔥</span>
+                    <span>What's Hot</span>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-category">Tech · Live Now</div>
+                    <div class="trend-topic">AI Innovations 2026</div>
+                    <div class="trend-count">287K chirps</div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-category">Design · Trending</div>
+                    <div class="trend-topic">Minimal UI Renaissance</div>
+                    <div class="trend-count">156K chirps</div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-category">Development · Popular</div>
+                    <div class="trend-topic">#BuildInPublic</div>
+                    <div class="trend-count">98.5K chirps</div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-category">Gaming · Trending</div>
+                    <div class="trend-topic">Next-Gen Graphics</div>
+                    <div class="trend-count">412K chirps</div>
+                </div>
+            </div>
+            
+            <!-- Who to Follow Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span class="sparkle">✨</span>
+                    <span>Suggested For You</span>
+                </div>
+                <div class="widget-content">
+                    <div class="follow-item">
+                        <div class="follow-user">
+                            <div class="follow-avatar">🎯</div>
+                            <div>
+                                <div class="follow-name">Jordan Rivers</div>
+                                <div class="follow-handle">@jordan_codes</div>
+                            </div>
+                        </div>
+                        <div class="follow-btn">Follow</div>
+                    </div>
+                    <div class="follow-item">
+                        <div class="follow-user">
+                            <div class="follow-avatar">🎨</div>
+                            <div>
+                                <div class="follow-name">Maya Creative</div>
+                                <div class="follow-handle">@maya_designs</div>
+                            </div>
+                        </div>
+                        <div class="follow-btn">Follow</div>
+                    </div>
+                    <div class="follow-item">
+                        <div class="follow-user">
+                            <div class="follow-avatar">🚀</div>
+                            <div>
+                                <div class="follow-name">Startup Daily</div>
+                                <div class="follow-handle">@startup_news</div>
+                            </div>
+                        </div>
+                        <div class="follow-btn">Follow</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
