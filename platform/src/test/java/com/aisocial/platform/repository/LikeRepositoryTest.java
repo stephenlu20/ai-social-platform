@@ -35,6 +35,13 @@ class LikeRepositoryTest {
         User user = userRepository.save(new User("alice", "Alice", ""));
         Post post = postRepository.save(new Post(user, "Hello world"));
 
+        // Create and save a Like
+        Like like = new Like();
+        like.setUser(user);
+        like.setPost(post);
+        likeRepository.save(like);
+
+        // Fetch
         Optional<Like> fetched = likeRepository.findByUserAndPost(user, post);
 
         assertThat(fetched).isPresent();

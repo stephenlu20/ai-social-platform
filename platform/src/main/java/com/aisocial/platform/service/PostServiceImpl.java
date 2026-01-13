@@ -1,6 +1,5 @@
 package com.aisocial.platform.service;
 
-import com.aisocial.platform.entity.Follow;
 import com.aisocial.platform.entity.Post;
 import com.aisocial.platform.entity.User;
 import com.aisocial.platform.repository.FollowRepository;
