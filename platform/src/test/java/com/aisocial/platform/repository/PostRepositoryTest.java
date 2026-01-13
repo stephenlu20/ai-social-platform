@@ -111,21 +111,25 @@ class PostRepositoryTest {
         User bob = userRepository.save(new User("bob", "Bob", ""));
         User carol = userRepository.save(new User("carol", "Carol", ""));
 
-        // Alice follows Bob and Carol
         followRepository.save(new Follow(alice, bob));
         followRepository.save(new Follow(alice, carol));
 
-        Post bobPost = postRepository.save(new Post(bob, "Bob post"));
-        Post carolPost = postRepository.save(new Post(carol, "Carol post"));
+        Instant earlier = Instant.now().minusSeconds(10);
+        Instant later = Instant.now();
+
+        Post bobPost = new Post(bob, "Bob post");
+        bobPost.setCreatedAt(earlier);
+        postRepository.save(bobPost);
+
+        Post carolPost = new Post(carol, "Carol post");
+        carolPost.setCreatedAt(later);
+        postRepository.save(carolPost);
 
         List<Post> feed =
             postRepository.findFeedPostsByAuthors(
                 followRepository.findFollowingByUserId(alice.getId())
             );
 
-        assertThat(feed).hasSize(2);
-
-        // Assert ordering, not timestamps
         assertThat(feed)
             .extracting(Post::getId)
             .containsExactly(
