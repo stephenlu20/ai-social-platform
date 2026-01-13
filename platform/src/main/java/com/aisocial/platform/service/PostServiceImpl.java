@@ -114,8 +114,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getFeedForUser(UUID userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         List<User> followedUsers = followRepository.findFollowingByUserId(userId);
 
