@@ -1,0 +1,22 @@
+
+
+.layout-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 280px 1fr 380px;
+  gap: 20px;
+  padding: 0 20px;
+}
+
+@media (max-width: 1200px) {
+  .layout-container {
+    grid-template-columns: 80px 1fr 300px;
+  }
+}
+
+@media (max-width: 900px) {
+  .layout-container {
+    grid-template-columns: 1fr;
+  }
+}
