@@ -1,7 +1,6 @@
 package com.aisocial.platform.service;
 
 import com.aisocial.platform.dto.UserDTO;
-import com.aisocial.platform.entity.User;
 
 import java.util.List;
 import java.util.Optional;
