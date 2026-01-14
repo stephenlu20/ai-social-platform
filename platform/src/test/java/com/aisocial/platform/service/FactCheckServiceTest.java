@@ -105,7 +105,7 @@ class FactCheckServiceTest {
         fc.setRequestedBy(user);
         fc = service.save(fc);
 
-        service.delete(fc);
+        service.delete(fc.getId());
 
         Optional<FactCheck> deleted = service.findById(fc.getId());
         assertThat(deleted).isEmpty();
