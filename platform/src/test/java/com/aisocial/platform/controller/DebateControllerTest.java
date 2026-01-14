@@ -2,8 +2,15 @@ package com.aisocial.platform.controller;
 
 import com.aisocial.platform.dto.CreateDebateRequestDTO;
 import com.aisocial.platform.dto.DebateDTO;
+import com.aisocial.platform.dto.SubmitArgumentRequestDTO;
+import com.aisocial.platform.entity.Debate;
+import com.aisocial.platform.entity.DebateArgument;
 import com.aisocial.platform.entity.DebateStatus;
+import com.aisocial.platform.entity.User;
+import com.aisocial.platform.repository.DebateRepository;
+import com.aisocial.platform.repository.UserRepository;
 import com.aisocial.platform.service.DebateService;
+import com.aisocial.platform.service.DebateStateMachine;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -34,6 +42,15 @@ class DebateControllerTest {
     @Mock
     private DebateService debateService;
 
+    @Mock
+    private DebateStateMachine debateStateMachine;
+
+    @Mock
+    private DebateRepository debateRepository;
+
+    @Mock
+    private UserRepository userRepository;
+
     @InjectMocks
     private DebateController debateController;
 
@@ -42,6 +59,9 @@ class DebateControllerTest {
     private UUID defenderId;
     private UUID debateId;
     private DebateDTO debateDTO;
+    private User challenger;
+    private User defender;
+    private Debate debate;
 
     @BeforeEach
     void setUp() {
@@ -57,6 +77,17 @@ class DebateControllerTest {
         debateDTO.setId(debateId);
         debateDTO.setTopic("Is Java better than Python?");
         debateDTO.setStatus(DebateStatus.PENDING);
+
+        challenger = new User("challenger", "Challenger", "Bio");
+        challenger.setId(challengerId);
+
+        defender = new User("defender", "Defender", "Bio");
+        defender.setId(defenderId);
+
+        debate = new Debate("Is Java better than Python?", challenger, defender);
+        debate.setId(debateId);
+        debate.setStatus(DebateStatus.ACTIVE);
+        debate.setWhoseTurn(challenger);
     }
 
     @Test
@@ -161,5 +192,93 @@ class DebateControllerTest {
                         .header("X-User-Id", defenderId.toString()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(debateId.toString()));
+    }
+
+    @Test
+    @DisplayName("Should submit argument when it's user's turn")
+    void shouldSubmitArgumentWhenUsersTurn() throws Exception {
+        SubmitArgumentRequestDTO request = new SubmitArgumentRequestDTO("My argument content");
+        DebateArgument argument = new DebateArgument(debate, challenger, 1, "My argument content");
+        argument.setId(UUID.randomUUID());
+
+        when(debateRepository.findById(debateId)).thenReturn(Optional.of(debate));
+        when(userRepository.findById(challengerId)).thenReturn(Optional.of(challenger));
+        when(debateStateMachine.submitArgument(debate, challenger, "My argument content"))
+                .thenReturn(argument);
+
+        mockMvc.perform(post("/api/debates/{id}/arguments", debateId)
+                        .header("X-User-Id", challengerId.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.content").value("My argument content"))
+                .andExpect(jsonPath("$.roundNumber").value(1));
+    }
+
+    @Test
+    @DisplayName("Should return 403 when not user's turn")
+    void shouldReturn403WhenNotUsersTurn() throws Exception {
+        SubmitArgumentRequestDTO request = new SubmitArgumentRequestDTO("My argument content");
+
+        when(debateRepository.findById(debateId)).thenReturn(Optional.of(debate));
+        when(userRepository.findById(defenderId)).thenReturn(Optional.of(defender));
+        when(debateStateMachine.submitArgument(debate, defender, "My argument content"))
+                .thenThrow(new IllegalStateException("Not user's turn"));
+
+        mockMvc.perform(post("/api/debates/{id}/arguments", debateId)
+                        .header("X-User-Id", defenderId.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Should return 404 when debate not found")
+    void shouldReturn404WhenDebateNotFoundForArgument() throws Exception {
+        SubmitArgumentRequestDTO request = new SubmitArgumentRequestDTO("My argument content");
+        UUID nonExistentDebateId = UUID.randomUUID();
+
+        when(debateRepository.findById(nonExistentDebateId)).thenReturn(Optional.empty());
+
+        mockMvc.perform(post("/api/debates/{id}/arguments", nonExistentDebateId)
+                        .header("X-User-Id", challengerId.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Should return 400 when user not found")
+    void shouldReturn400WhenUserNotFound() throws Exception {
+        SubmitArgumentRequestDTO request = new SubmitArgumentRequestDTO("My argument content");
+        UUID nonExistentUserId = UUID.randomUUID();
+
+        when(debateRepository.findById(debateId)).thenReturn(Optional.of(debate));
+        when(userRepository.findById(nonExistentUserId)).thenReturn(Optional.empty());
+
+        mockMvc.perform(post("/api/debates/{id}/arguments", debateId)
+                        .header("X-User-Id", nonExistentUserId.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Should return 403 when user is not a participant")
+    void shouldReturn403WhenNotParticipant() throws Exception {
+        SubmitArgumentRequestDTO request = new SubmitArgumentRequestDTO("My argument content");
+        User outsider = new User("outsider", "Outsider", "Bio");
+        outsider.setId(UUID.randomUUID());
+
+        when(debateRepository.findById(debateId)).thenReturn(Optional.of(debate));
+        when(userRepository.findById(outsider.getId())).thenReturn(Optional.of(outsider));
+        when(debateStateMachine.submitArgument(debate, outsider, "My argument content"))
+                .thenThrow(new IllegalStateException("User is not a participant"));
+
+        mockMvc.perform(post("/api/debates/{id}/arguments", debateId)
+                        .header("X-User-Id", outsider.getId().toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isForbidden());
     }
 }

@@ -2,7 +2,14 @@ package com.aisocial.platform.controller;
 
 import com.aisocial.platform.dto.CreateDebateRequestDTO;
 import com.aisocial.platform.dto.DebateDTO;
+import com.aisocial.platform.dto.SubmitArgumentRequestDTO;
+import com.aisocial.platform.entity.Debate;
+import com.aisocial.platform.entity.DebateArgument;
+import com.aisocial.platform.entity.User;
+import com.aisocial.platform.repository.DebateRepository;
+import com.aisocial.platform.repository.UserRepository;
 import com.aisocial.platform.service.DebateService;
+import com.aisocial.platform.service.DebateStateMachine;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +23,18 @@ import java.util.UUID;
 public class DebateController {
 
     private final DebateService debateService;
+    private final DebateStateMachine debateStateMachine;
+    private final DebateRepository debateRepository;
+    private final UserRepository userRepository;
 
-    public DebateController(DebateService debateService) {
+    public DebateController(DebateService debateService,
+                            DebateStateMachine debateStateMachine,
+                            DebateRepository debateRepository,
+                            UserRepository userRepository) {
         this.debateService = debateService;
+        this.debateStateMachine = debateStateMachine;
+        this.debateRepository = debateRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -111,5 +127,34 @@ public class DebateController {
             @RequestHeader("X-User-Id") UUID userId) {
         List<DebateDTO> debates = debateService.getPendingChallengesForUser(userId);
         return ResponseEntity.ok(debates);
+    }
+
+    /**
+     * Submit an argument for a debate.
+     * Validates that it's the user's turn before accepting.
+     * POST /api/debates/{id}/arguments
+     */
+    @PostMapping("/{id}/arguments")
+    public ResponseEntity<DebateArgument> submitArgument(
+            @PathVariable UUID id,
+            @RequestHeader("X-User-Id") UUID userId,
+            @RequestBody SubmitArgumentRequestDTO request) {
+
+        Debate debate = debateRepository.findById(id).orElse(null);
+        if (debate == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        try {
+            DebateArgument argument = debateStateMachine.submitArgument(debate, user, request.getContent());
+            return new ResponseEntity<>(argument, HttpStatus.CREATED);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 }
