@@ -1,5 +1,7 @@
 package com.aisocial.platform.service;
 
+import com.aisocial.platform.dto.PostResponseDTO;
+import com.aisocial.platform.dto.PostSearchRequestDTO;
 import com.aisocial.platform.entity.Post;
 import com.aisocial.platform.entity.User;
 import com.aisocial.platform.repository.FollowRepository;
@@ -135,29 +137,35 @@ public class PostServiceImpl implements PostService {
     }
     
     @Override
-    public Page<Post> searchPosts(
-            String query,
-            UUID authorId,
-            Instant start,
-            Instant end,
-            int page,
-            int size
-    ) {
-        User author = null;
+    public Page<PostResponseDTO> searchPosts(PostSearchRequestDTO request) {
 
-        if (authorId != null) {
-            author = userRepository.findById(authorId)
+        User author = null;
+        if (request.getAuthorId() != null) {
+            author = userRepository.findById(request.getAuthorId())
                     .orElseThrow(() -> new IllegalArgumentException("Author not found"));
         }
 
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
 
-        return postRepository.searchPosts(
-                query,
+        Page<Post> posts = postRepository.searchPosts(
+                request.getQuery(),
                 author,
-                start,
-                end,
+                request.getStart(),
+                request.getEnd(),
                 pageable
         );
+
+        // Map entity → DTO
+        return posts.map(p -> new PostResponseDTO(
+                p.getId(),
+                p.getAuthor().getId(),
+                p.getContent(),
+                p.getReplyTo() != null ? p.getReplyTo().getId() : null,
+                p.getRepostOf() != null ? p.getRepostOf().getId() : null,
+                p.getCreatedAt(),
+                p.getLikeCount(),
+                p.getReplyCount(),
+                p.getRepostCount()
+        ));
     }
 }

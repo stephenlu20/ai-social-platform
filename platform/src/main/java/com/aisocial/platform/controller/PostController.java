@@ -5,17 +5,17 @@ import com.aisocial.platform.entity.Post;
 import com.aisocial.platform.service.PostService;
 import com.aisocial.platform.service.LikeService;
 import com.aisocial.platform.dto.CreatePostRequestDTO;
+import com.aisocial.platform.dto.PostResponseDTO;
+import com.aisocial.platform.dto.PostSearchRequestDTO;
 import com.aisocial.platform.dto.ReplyPostRequestDTO;
 import com.aisocial.platform.dto.RepostRequestDTO;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
-import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -106,26 +106,8 @@ public class PostController {
         return ResponseEntity.ok(replies);
     }
 
-    @GetMapping("/search")
-    public Page<Post> searchPosts(
-            @RequestParam(required = false) String query,
-            @RequestParam(required = false) UUID authorId,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            Instant start,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            Instant end,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
-    ) {
-        return postService.searchPosts(
-                query,
-                authorId,
-                start,
-                end,
-                page,
-                size
-        );
+    @PostMapping("/search")
+    public Page<PostResponseDTO> searchPosts(@RequestBody PostSearchRequestDTO request) {
+        return postService.searchPosts(request);
     }
 }

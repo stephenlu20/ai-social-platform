@@ -1,5 +1,7 @@
 package com.aisocial.platform.service;
 
+import com.aisocial.platform.dto.PostResponseDTO;
+import com.aisocial.platform.dto.PostSearchRequestDTO;
 import com.aisocial.platform.entity.Post;
 import com.aisocial.platform.entity.User;
 import org.springframework.data.domain.Page;    
@@ -33,12 +35,5 @@ public interface PostService {
 
     List<Post> getReplies(UUID postId);
 
-    Page<Post> searchPosts(
-            String query,
-            UUID authorId,
-            Instant start,
-            Instant end,
-            int page,
-            int size
-    );
+    Page<PostResponseDTO> searchPosts(PostSearchRequestDTO request);
 }
