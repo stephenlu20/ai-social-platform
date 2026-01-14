@@ -28,4 +28,6 @@ public interface PostService {
     void incrementRepostCount(Post post);
 
     List<Post> getFeedForUser(UUID userId);
+
+    List<Post> getReplies(UUID postId);
 }

@@ -17,6 +17,8 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
 
     List<Post> findByRepostOf(Post repostOf);
 
+    List<Post> findByReplyTo_IdOrderByCreatedAtAsc(UUID parentPostId);
+
     @Query("""
         SELECT p
         FROM Post p

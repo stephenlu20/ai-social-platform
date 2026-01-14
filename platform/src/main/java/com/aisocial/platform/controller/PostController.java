@@ -95,4 +95,10 @@ public class PostController {
         long count = likeService.countLikes(postId);
         return ResponseEntity.ok(count);
     }
+
+    @GetMapping("/{postId}/replies")
+    public ResponseEntity<List<Post>> getReplies(@PathVariable UUID postId) {
+        List<Post> replies = postService.getReplies(postId);
+        return ResponseEntity.ok(replies);
+    }
 }

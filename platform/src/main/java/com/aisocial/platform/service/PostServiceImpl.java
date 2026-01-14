@@ -125,4 +125,9 @@ public class PostServiceImpl implements PostService {
 
         return postRepository.findFeedPostsByAuthors(followedUsers);
     }
+
+    @Override
+    public List<Post> getReplies(UUID postId) {
+        return postRepository.findByReplyTo_IdOrderByCreatedAtAsc(postId);
+    }
 }
