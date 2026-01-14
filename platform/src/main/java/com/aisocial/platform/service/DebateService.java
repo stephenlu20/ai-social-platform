@@ -13,7 +13,7 @@ public interface DebateService {
 
     DebateDTO acceptChallenge(UUID debateId, UUID userId);
 
-    DebateDTO declineChallenge(UUID debateId, UUID userId);
+    void declineChallenge(UUID debateId, UUID userId);
 
     Optional<DebateDTO> getDebateById(UUID debateId);
 

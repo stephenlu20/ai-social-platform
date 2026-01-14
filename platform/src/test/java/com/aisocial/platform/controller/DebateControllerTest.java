@@ -29,6 +29,7 @@ import java.util.UUID;
 
 
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -166,7 +167,7 @@ class DebateControllerTest {
     @DisplayName("Should decline challenge")
     void shouldDeclineChallenge() throws Exception {
         debateDTO.setStatus(DebateStatus.PENDING);
-        when(debateService.declineChallenge(debateId, defenderId)).thenReturn(debateDTO);
+        doNothing().when(debateService).declineChallenge(debateId, defenderId);
 
         mockMvc.perform(post("/api/debates/{id}/decline", debateId)
                         .header("X-User-Id", defenderId.toString()))
