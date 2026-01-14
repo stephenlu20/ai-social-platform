@@ -6,12 +6,12 @@ import HelpBadge from '../common/HelpBadge';
 function Sidebar() {
   const navItems = [
     { icon: '🏠', label: 'Home', badge: null },
-    { icon: '🌍', label: 'Explore', badge: null },
-    { icon: '💬', label: 'Messages', badge: { number: '3', tooltip: 'Feature #2: Direct Messages & Groups' } },
-    { icon: '👥', label: 'Groups', badge: { number: '17', tooltip: 'Feature #17: Groups & Communities' } },
-    { icon: '⭐', label: 'Bookmarks', badge: { number: '14', tooltip: 'Feature #14: Bookmarks & Favorites' } },
-    { icon: '👤', label: 'Profile', badge: { number: '1', tooltip: 'Feature #1: Your User Page' } },
-    { icon: '🤝', label: 'Friends', badge: { number: '15', tooltip: 'Feature #15: Friends List' } },
+  { icon: '🌍', label: 'Explore', badge: null },
+  { icon: '💬', label: 'Messages', badge: null },
+  { icon: '👥', label: 'Groups', badge: null },
+  { icon: '⭐', label: 'Bookmarks', badge: null },
+  { icon: '👤', label: 'Profile', badge: null },
+  { icon: '🤝', label: 'Friends', badge: null },
   ];
 
   return (
