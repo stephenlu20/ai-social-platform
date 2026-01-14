@@ -90,7 +90,7 @@ class DebateArgumentServiceTest {
         DebateArgument arg = new DebateArgument(debate, user, 4, "To be deleted");
         service.save(arg);
 
-        service.delete(arg);
+        service.delete(arg.getId());
 
         Optional<DebateArgument> deleted = service.findById(arg.getId());
         assertThat(deleted).isEmpty();
