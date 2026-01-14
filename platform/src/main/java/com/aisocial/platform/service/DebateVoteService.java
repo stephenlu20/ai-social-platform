@@ -41,6 +41,9 @@ public class DebateVoteService {
         if (isParticipant(vote.getDebateId(), vote.getUserId())) {
             throw new IllegalArgumentException("Debate participants cannot vote on their own debate");
         }
+        if (debateVoteRepository.findByDebateIdAndUserId(vote.getDebateId(), vote.getUserId()).isPresent()) {
+            throw new IllegalArgumentException("User has already voted on this debate");
+        }
         return debateVoteRepository.save(vote);
     }
 
