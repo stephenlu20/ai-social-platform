@@ -25,4 +25,6 @@ public interface DebateArgumentRepository extends JpaRepository<DebateArgument, 
     // Delete all arguments for a debate
     void deleteById(UUID id);
 
+    //Count arguments in a specific round
+    int countByDebateAndRoundNumber(Debate debate, Integer roundNumber);
 }
