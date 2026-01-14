@@ -1,15 +1,12 @@
 package com.aisocial.platform.dto;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 
 public class UserSearchRequestDTO {
     private String username;           // partial match
     private String displayName;        // partial match
     private BigDecimal minTrustScore;  // optional
     private BigDecimal maxTrustScore;  // optional
-    private Instant createdAfter;      // optional
-    private Instant createdBefore;     // optional
     private int page = 0;              // pagination
     private int size = 20;             // pagination
 
@@ -25,12 +22,6 @@ public class UserSearchRequestDTO {
 
     public BigDecimal getMaxTrustScore() { return maxTrustScore; }
     public void setMaxTrustScore(BigDecimal maxTrustScore) { this.maxTrustScore = maxTrustScore; }
-
-    public Instant getCreatedAfter() { return createdAfter; }
-    public void setCreatedAfter(Instant createdAfter) { this.createdAfter = createdAfter; }
-
-    public Instant getCreatedBefore() { return createdBefore; }
-    public void setCreatedBefore(Instant createdBefore) { this.createdBefore = createdBefore; }
 
     public int getPage() { return page; }
     public void setPage(int page) { this.page = page; }

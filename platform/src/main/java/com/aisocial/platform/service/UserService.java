@@ -1,6 +1,9 @@
 package com.aisocial.platform.service;
 
 import com.aisocial.platform.dto.UserDTO;
+import com.aisocial.platform.dto.UserResponseDTO;
+import com.aisocial.platform.dto.UserSearchRequestDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,4 +34,6 @@ public interface UserService {
     long getFollowerCount(UUID userId);
 
     long getFollowingCount(UUID userId);
+    
+    Page<UserResponseDTO> searchUsers(UserSearchRequestDTO request);
 }

@@ -1,7 +1,11 @@
 package com.aisocial.platform.controller;
 
+import com.aisocial.platform.dto.UserResponseDTO;
+import com.aisocial.platform.dto.UserSearchRequestDTO;
 import com.aisocial.platform.entity.User;
 import com.aisocial.platform.repository.UserRepository;
+import com.aisocial.platform.service.UserService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -10,8 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.math.BigDecimal;
 
@@ -30,6 +37,9 @@ class UserControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     private User testUser1;
     private User testUser2;
@@ -211,5 +221,11 @@ class UserControllerTest {
             mockMvc.perform(get("/api/users/{id}/trust-breakdown", "00000000-0000-0000-0000-000000000000"))
                     .andExpect(status().isNotFound());
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<UserResponseDTO>> searchUsers(UserSearchRequestDTO request) {
+        Page<UserResponseDTO> result = userService.searchUsers(request);
+        return ResponseEntity.ok(result);
     }
 }

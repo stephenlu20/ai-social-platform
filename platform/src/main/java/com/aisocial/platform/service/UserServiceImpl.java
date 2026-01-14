@@ -1,11 +1,17 @@
 package com.aisocial.platform.service;
 
 import com.aisocial.platform.dto.UserDTO;
+import com.aisocial.platform.dto.UserResponseDTO;
+import com.aisocial.platform.dto.UserSearchRequestDTO;
 import com.aisocial.platform.entity.Follow;
 import com.aisocial.platform.entity.User;
 import com.aisocial.platform.repository.FollowRepository;
 import com.aisocial.platform.repository.PostRepository;
 import com.aisocial.platform.repository.UserRepository;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -142,5 +148,44 @@ public class UserServiceImpl implements UserService {
         }
 
         return dto;
+    }
+
+    @Override
+    public Page<UserResponseDTO> searchUsers(UserSearchRequestDTO request) {
+        Specification<User> spec = (root, query, cb) -> {
+            var predicates = cb.conjunction();
+
+            if (request.getUsername() != null && !request.getUsername().isEmpty()) {
+                predicates = cb.and(predicates,
+                        cb.like(cb.lower(root.get("username")), "%" + request.getUsername().toLowerCase() + "%"));
+            }
+
+            if (request.getDisplayName() != null && !request.getDisplayName().isEmpty()) {
+                predicates = cb.and(predicates,
+                        cb.like(cb.lower(root.get("displayName")), "%" + request.getDisplayName().toLowerCase() + "%"));
+            }
+
+            if (request.getMinTrustScore() != null) {
+                predicates = cb.and(predicates,
+                        cb.ge(root.get("trustScore"), request.getMinTrustScore()));
+            }
+
+            if (request.getMaxTrustScore() != null) {
+                predicates = cb.and(predicates,
+                        cb.le(root.get("trustScore"), request.getMaxTrustScore()));
+            }
+
+            return predicates;
+        };
+
+        Page<User> page = userRepository.findAll(spec, PageRequest.of(request.getPage(), request.getSize()));
+
+        return page.map(u -> new UserResponseDTO(
+                u.getId(),
+                u.getUsername(),
+                u.getDisplayName(),
+                u.getTrustScore(),
+                u.getCreatedAt()
+        ));
     }
 }
