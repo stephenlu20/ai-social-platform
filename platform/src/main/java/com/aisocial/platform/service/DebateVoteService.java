@@ -1,6 +1,7 @@
 package com.aisocial.platform.service;
 
 import com.aisocial.platform.entity.DebateVote;
+import com.aisocial.platform.entity.VoteType;
 import com.aisocial.platform.repository.DebateVoteRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,8 +20,22 @@ public class DebateVoteService {
         this.debateVoteRepository = debateVoteRepository;
     }
 
+    public List<DebateVote> findAll() {
+        return debateVoteRepository.findAll();
+    }
+
     public DebateVote save(DebateVote vote) {
         return debateVoteRepository.save(vote);
+    }
+
+    public DebateVote update(UUID id, VoteType newVote) {
+        Optional<DebateVote> existing = debateVoteRepository.findById(id);
+        if (existing.isPresent()) {
+            DebateVote vote = existing.get();
+            vote.setVote(newVote);
+            return debateVoteRepository.save(vote);
+        }
+        return null; // not found
     }
 
     public Optional<DebateVote> findById(UUID id) {
@@ -35,7 +50,12 @@ public class DebateVoteService {
         return debateVoteRepository.findByUserId(userId);
     }
 
-    public void delete(DebateVote vote) {
-        debateVoteRepository.delete(vote);
+    public boolean delete(UUID id) {
+        Optional<DebateVote> existing = debateVoteRepository.findById(id);
+        if (existing.isPresent()) {
+            debateVoteRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

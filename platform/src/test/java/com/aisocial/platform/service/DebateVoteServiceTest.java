@@ -65,7 +65,7 @@ class DebateVoteServiceTest {
         vote.setVote(VoteType.DEFENDER);
 
         service.save(vote);
-        service.delete(vote);
+        service.delete(vote.getId());
 
         List<DebateVote> votes = service.findByDebateId(debateId);
         assertThat(votes).isEmpty();
