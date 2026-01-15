@@ -23,7 +23,11 @@ function MainFeed() {
       setLoading(true);
       setError(null);
       const feed = await postService.getFeed(currentUser.id);
-      setPosts(feed);
+      const sortedFeed = feed.sort((a, b) => 
+      new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      setPosts(sortedFeed);
     } catch (err) {
       console.error('Error loading posts:', err);
       setError('Failed to load posts');
