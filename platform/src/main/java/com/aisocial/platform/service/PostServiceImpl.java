@@ -2,6 +2,7 @@ package com.aisocial.platform.service;
 
 import com.aisocial.platform.dto.PostResponseDTO;
 import com.aisocial.platform.dto.PostSearchRequestDTO;
+import com.aisocial.platform.dto.UserDTO;
 import com.aisocial.platform.entity.Post;
 import com.aisocial.platform.entity.User;
 import com.aisocial.platform.repository.FollowRepository;
@@ -17,6 +18,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -124,7 +126,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getFeedForUser(UUID userId) {
+    public List<PostResponseDTO> getFeedForUser(UUID userId) {
         userRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
@@ -134,7 +136,11 @@ public class PostServiceImpl implements PostService {
             return List.of();
         }
 
-        return postRepository.findFeedPostsByAuthors(followedUsers);
+        List<Post> posts = postRepository.findFeedPostsByAuthors(followedUsers);
+        
+        return posts.stream()
+            .map(this::convertToDTO)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -161,17 +167,35 @@ public class PostServiceImpl implements PostService {
                 pageable
         );
 
-        // Map entity → DTO
-        return posts.map(p -> new PostResponseDTO(
-                p.getId(),
-                p.getAuthor().getId(),
-                p.getContent(),
-                p.getReplyTo() != null ? p.getReplyTo().getId() : null,
-                p.getRepostOf() != null ? p.getRepostOf().getId() : null,
-                p.getCreatedAt(),
-                p.getLikeCount(),
-                p.getReplyCount(),
-                p.getRepostCount()
-        ));
+        return posts.map(this::convertToDTO);
+    }
+
+    private PostResponseDTO convertToDTO(Post post) {
+        PostResponseDTO dto = new PostResponseDTO();
+        dto.setId(post.getId());
+        dto.setContent(post.getContent());
+        dto.setCreatedAt(post.getCreatedAt());
+        dto.setLikeCount(post.getLikeCount());
+        dto.setReplyCount(post.getReplyCount());
+        dto.setRepostCount(post.getRepostCount());
+        dto.setFactCheckStatus(post.getFactCheckStatus());
+        dto.setFactCheckScore(post.getFactCheckScore());
+        
+        dto.setAuthor(new UserDTO(post.getAuthor()));
+        
+        if (post.getReplyTo() != null) {
+            dto.setReplyToId(post.getReplyTo().getId());
+        }
+        
+        if (post.getRepostOf() != null) {
+            dto.setRepostOfId(post.getRepostOf().getId());
+            PostResponseDTO repostDto = new PostResponseDTO();
+            repostDto.setId(post.getRepostOf().getId());
+            repostDto.setContent(post.getRepostOf().getContent());
+            repostDto.setAuthor(new UserDTO(post.getRepostOf().getAuthor()));
+            dto.setRepostOf(repostDto);
+        }
+        
+        return dto;
     }
 }

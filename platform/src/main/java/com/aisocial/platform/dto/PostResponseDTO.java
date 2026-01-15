@@ -1,43 +1,31 @@
 package com.aisocial.platform.dto;
 
+import com.aisocial.platform.entity.FactCheckStatus;
 import java.time.Instant;
 import java.util.UUID;
 
 public class PostResponseDTO {
 
     private UUID id;
-    private UUID authorId;
+    private UserDTO author;
     private String content;
     private UUID replyToId;
     private UUID repostOfId;
+    private PostResponseDTO repostOf;
     private Instant createdAt;
     private Integer likeCount;
     private Integer replyCount;
     private Integer repostCount;
+    private FactCheckStatus factCheckStatus;
+    private Double factCheckScore;
 
     public PostResponseDTO() {}
 
-    public PostResponseDTO(UUID id, UUID authorId, String content, UUID replyToId, UUID repostOfId,
-                           Instant createdAt, Integer likeCount, Integer replyCount, Integer repostCount) {
-        this.id = id;
-        this.authorId = authorId;
-        this.content = content;
-        this.replyToId = replyToId;
-        this.repostOfId = repostOfId;
-        this.createdAt = createdAt;
-        this.likeCount = likeCount;
-        this.replyCount = replyCount;
-        this.repostCount = repostCount;
-    }
-
-    // ---------------------
-    // Getters and Setters
-    // ---------------------
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
 
-    public UUID getAuthorId() { return authorId; }
-    public void setAuthorId(UUID authorId) { this.authorId = authorId; }
+    public UserDTO getAuthor() { return author; }
+    public void setAuthor(UserDTO author) { this.author = author; }
 
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
@@ -47,6 +35,9 @@ public class PostResponseDTO {
 
     public UUID getRepostOfId() { return repostOfId; }
     public void setRepostOfId(UUID repostOfId) { this.repostOfId = repostOfId; }
+
+    public PostResponseDTO getRepostOf() { return repostOf; }
+    public void setRepostOf(PostResponseDTO repostOf) { this.repostOf = repostOf; }
 
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
@@ -59,4 +50,10 @@ public class PostResponseDTO {
 
     public Integer getRepostCount() { return repostCount; }
     public void setRepostCount(Integer repostCount) { this.repostCount = repostCount; }
+
+    public FactCheckStatus getFactCheckStatus() { return factCheckStatus; }
+    public void setFactCheckStatus(FactCheckStatus factCheckStatus) { this.factCheckStatus = factCheckStatus; }
+
+    public Double getFactCheckScore() { return factCheckScore; }
+    public void setFactCheckScore(Double factCheckScore) { this.factCheckScore = factCheckScore; }
 }
