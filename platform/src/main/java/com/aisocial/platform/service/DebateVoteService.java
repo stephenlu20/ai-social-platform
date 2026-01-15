@@ -41,13 +41,36 @@ public class DebateVoteService {
         if (isParticipant(vote.getDebateId(), vote.getUserId())) {
             throw new IllegalArgumentException("Debate participants cannot vote on their own debate");
         }
-        return debateVoteRepository.save(vote);
+        if (debateVoteRepository.findByDebateIdAndUserId(vote.getDebateId(), vote.getUserId()).isPresent()) {
+            throw new IllegalArgumentException("User has already voted on this debate");
+        }
+
+        DebateVote savedVote = debateVoteRepository.save(vote);
+
+        // Update debate vote counts
+        Debate debate = debateRepository.findById(vote.getDebateId())
+                .orElseThrow(() -> new IllegalArgumentException("Debate not found"));
+        incrementVoteCount(debate, vote.getVote());
+        debateRepository.save(debate);
+
+        return savedVote;
     }
 
     public DebateVote update(UUID id, VoteType newVote) {
         Optional<DebateVote> existing = debateVoteRepository.findById(id);
         if (existing.isPresent()) {
             DebateVote vote = existing.get();
+            VoteType oldVote = vote.getVote();
+
+            // Update debate vote counts if vote type changed
+            if (oldVote != newVote) {
+                Debate debate = debateRepository.findById(vote.getDebateId())
+                        .orElseThrow(() -> new IllegalArgumentException("Debate not found"));
+                decrementVoteCount(debate, oldVote);
+                incrementVoteCount(debate, newVote);
+                debateRepository.save(debate);
+            }
+
             vote.setVote(newVote);
             return debateVoteRepository.save(vote);
         }
@@ -69,9 +92,33 @@ public class DebateVoteService {
     public boolean delete(UUID id) {
         Optional<DebateVote> existing = debateVoteRepository.findById(id);
         if (existing.isPresent()) {
+            DebateVote vote = existing.get();
+
+            // Update debate vote counts
+            debateRepository.findById(vote.getDebateId()).ifPresent(debate -> {
+                decrementVoteCount(debate, vote.getVote());
+                debateRepository.save(debate);
+            });
+
             debateVoteRepository.deleteById(id);
             return true;
         }
         return false;
+    }
+
+    private void incrementVoteCount(Debate debate, VoteType voteType) {
+        switch (voteType) {
+            case CHALLENGER -> debate.incrementVotesChallenger();
+            case DEFENDER -> debate.incrementVotesDefender();
+            case TIE -> debate.incrementVotesTie();
+        }
+    }
+
+    private void decrementVoteCount(Debate debate, VoteType voteType) {
+        switch (voteType) {
+            case CHALLENGER -> debate.decrementVotesChallenger();
+            case DEFENDER -> debate.decrementVotesDefender();
+            case TIE -> debate.decrementVotesTie();
+        }
     }
 }

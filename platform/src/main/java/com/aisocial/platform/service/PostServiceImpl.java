@@ -59,6 +59,9 @@ public class PostServiceImpl implements PostService {
         reply.setContent(content);
         reply.setReplyTo(parent);
 
+        parent.incrementReplyCount();
+        postRepository.save(parent);
+
         return postRepository.save(reply);
     }
 
@@ -73,6 +76,9 @@ public class PostServiceImpl implements PostService {
         Post repost = new Post();
         repost.setAuthor(author);
         repost.setRepostOf(original);
+
+        original.incrementRepostCount();
+        postRepository.save(original);
 
         return postRepository.save(repost);
     }

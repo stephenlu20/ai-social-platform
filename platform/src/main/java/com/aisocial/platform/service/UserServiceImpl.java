@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
 
         dto.setFollowerCount(followRepository.countByFollowing_Id(user.getId()));
         dto.setFollowingCount(followRepository.countByFollower_Id(user.getId()));
-        dto.setPostCount((long) postRepository.findByAuthor(user).size());
+        dto.setPostCount(postRepository.countByAuthor(user));
 
         if (viewerId != null && !viewerId.equals(user.getId())) {
             dto.setIsFollowing(followRepository.existsByFollower_IdAndFollowing_Id(viewerId, user.getId()));
@@ -150,19 +150,31 @@ public class UserServiceImpl implements UserService {
         return dto;
     }
 
+    /**
+     * Escapes LIKE pattern wildcards in user input to prevent pattern injection.
+     */
+    private String escapeLikePattern(String input) {
+        return input
+                .replace("\\", "\\\\")  // escape backslash first
+                .replace("%", "\\%")     // escape percent wildcard
+                .replace("_", "\\_");    // escape underscore wildcard
+    }
+
     @Override
     public Page<UserResponseDTO> searchUsers(UserSearchRequestDTO request) {
         Specification<User> spec = (root, query, cb) -> {
             var predicates = cb.conjunction();
 
             if (request.getUsername() != null && !request.getUsername().isEmpty()) {
+                String escaped = escapeLikePattern(request.getUsername().toLowerCase());
                 predicates = cb.and(predicates,
-                        cb.like(cb.lower(root.get("username")), "%" + request.getUsername().toLowerCase() + "%"));
+                        cb.like(cb.lower(root.get("username")), "%" + escaped + "%"));
             }
 
             if (request.getDisplayName() != null && !request.getDisplayName().isEmpty()) {
+                String escaped = escapeLikePattern(request.getDisplayName().toLowerCase());
                 predicates = cb.and(predicates,
-                        cb.like(cb.lower(root.get("displayName")), "%" + request.getDisplayName().toLowerCase() + "%"));
+                        cb.like(cb.lower(root.get("displayName")), "%" + escaped + "%"));
             }
 
             if (request.getMinTrustScore() != null) {

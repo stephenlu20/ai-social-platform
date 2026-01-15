@@ -67,7 +67,7 @@ public class DebateServiceImpl implements DebateService {
 
     @Override
     @Transactional
-    public DebateDTO declineChallenge(UUID debateId, UUID userId) {
+    public void declineChallenge(UUID debateId, UUID userId) {
         Debate debate = debateRepository.findById(debateId)
                 .orElseThrow(() -> new IllegalArgumentException("Debate not found"));
 
@@ -80,7 +80,6 @@ public class DebateServiceImpl implements DebateService {
         }
 
         debateRepository.delete(debate);
-        return DebateDTO.fromEntity(debate);
     }
 
     @Override

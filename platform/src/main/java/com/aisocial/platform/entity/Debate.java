@@ -89,12 +89,24 @@ public class Debate {
         this.votesChallenger++;
     }
 
+    public void decrementVotesChallenger() {
+        if (this.votesChallenger > 0) this.votesChallenger--;
+    }
+
     public void incrementVotesDefender() {
         this.votesDefender++;
     }
 
+    public void decrementVotesDefender() {
+        if (this.votesDefender > 0) this.votesDefender--;
+    }
+
     public void incrementVotesTie() {
         this.votesTie++;
+    }
+
+    public void decrementVotesTie() {
+        if (this.votesTie > 0) this.votesTie--;
     }
 
     public void advanceRound() {

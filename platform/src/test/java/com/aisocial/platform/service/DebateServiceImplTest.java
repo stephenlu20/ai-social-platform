@@ -166,9 +166,8 @@ class DebateServiceImplTest {
 
             when(debateRepository.findById(debate.getId())).thenReturn(Optional.of(debate));
 
-            DebateDTO result = debateService.declineChallenge(debate.getId(), defender.getId());
+            debateService.declineChallenge(debate.getId(), defender.getId());
 
-            assertNotNull(result);
             verify(debateRepository).delete(debate);
         }
 

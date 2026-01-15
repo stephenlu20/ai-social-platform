@@ -37,7 +37,8 @@ public class DebateStateMachine {
             return false;
         }
 
-        if (!user.getId().equals(debate.getWhoseTurn().getId())) {
+        User whoseTurn = debate.getWhoseTurn();
+        if (whoseTurn == null || !user.getId().equals(whoseTurn.getId())) {
             return false;
         }
 

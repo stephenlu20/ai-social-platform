@@ -78,7 +78,7 @@ class UserServiceTest {
             when(userRepository.findAll()).thenReturn(Arrays.asList(testUser1, testUser2));
             when(followRepository.countByFollowing_Id(any())).thenReturn(10L);
             when(followRepository.countByFollower_Id(any())).thenReturn(5L);
-            when(postRepository.findByAuthor(any())).thenReturn(Collections.emptyList());
+            when(postRepository.countByAuthor(any())).thenReturn(0L);
 
             List<UserDTO> users = userService.getAllUsers();
 
@@ -108,7 +108,7 @@ class UserServiceTest {
             when(userRepository.findAll()).thenReturn(List.of(testUser1));
             when(followRepository.countByFollowing_Id(any())).thenReturn(0L);
             when(followRepository.countByFollower_Id(any())).thenReturn(0L);
-            when(postRepository.findByAuthor(any())).thenReturn(Collections.emptyList());
+            when(postRepository.countByAuthor(any())).thenReturn(0L);
 
             List<UserDTO> users = userService.getAllUsers();
 
@@ -134,7 +134,7 @@ class UserServiceTest {
             when(userRepository.findById(testUser1.getId())).thenReturn(Optional.of(testUser1));
             when(followRepository.countByFollowing_Id(testUser1.getId())).thenReturn(100L);
             when(followRepository.countByFollower_Id(testUser1.getId())).thenReturn(50L);
-            when(postRepository.findByAuthor(testUser1)).thenReturn(Collections.emptyList());
+            when(postRepository.countByAuthor(testUser1)).thenReturn(0L);
 
             Optional<UserDTO> result = userService.getUserById(testUser1.getId());
 
@@ -160,7 +160,7 @@ class UserServiceTest {
             when(userRepository.findById(testUser2.getId())).thenReturn(Optional.of(testUser2));
             when(followRepository.countByFollowing_Id(any())).thenReturn(0L);
             when(followRepository.countByFollower_Id(any())).thenReturn(0L);
-            when(postRepository.findByAuthor(any())).thenReturn(Collections.emptyList());
+            when(postRepository.countByAuthor(any())).thenReturn(0L);
             when(followRepository.existsByFollower_IdAndFollowing_Id(testUser1.getId(), testUser2.getId()))
                     .thenReturn(true);
 
@@ -176,7 +176,7 @@ class UserServiceTest {
             when(userRepository.findById(testUser1.getId())).thenReturn(Optional.of(testUser1));
             when(followRepository.countByFollowing_Id(any())).thenReturn(0L);
             when(followRepository.countByFollower_Id(any())).thenReturn(0L);
-            when(postRepository.findByAuthor(any())).thenReturn(Collections.emptyList());
+            when(postRepository.countByAuthor(any())).thenReturn(0L);
 
             Optional<UserDTO> result = userService.getUserById(testUser1.getId(), testUser1.getId());
 
@@ -190,7 +190,7 @@ class UserServiceTest {
             when(userRepository.findById(testUser2.getId())).thenReturn(Optional.of(testUser2));
             when(followRepository.countByFollowing_Id(any())).thenReturn(0L);
             when(followRepository.countByFollower_Id(any())).thenReturn(0L);
-            when(postRepository.findByAuthor(any())).thenReturn(Collections.emptyList());
+            when(postRepository.countByAuthor(any())).thenReturn(0L);
             when(followRepository.existsByFollower_IdAndFollowing_Id(testUser1.getId(), testUser2.getId()))
                     .thenReturn(false);
 
@@ -211,7 +211,7 @@ class UserServiceTest {
             when(userRepository.findByUsername("user1")).thenReturn(Optional.of(testUser1));
             when(followRepository.countByFollowing_Id(any())).thenReturn(0L);
             when(followRepository.countByFollower_Id(any())).thenReturn(0L);
-            when(postRepository.findByAuthor(any())).thenReturn(Collections.emptyList());
+            when(postRepository.countByAuthor(any())).thenReturn(0L);
 
             Optional<UserDTO> result = userService.getUserByUsername("user1");
 
@@ -235,7 +235,7 @@ class UserServiceTest {
             when(userRepository.findByUsername("user2")).thenReturn(Optional.of(testUser2));
             when(followRepository.countByFollowing_Id(any())).thenReturn(0L);
             when(followRepository.countByFollower_Id(any())).thenReturn(0L);
-            when(postRepository.findByAuthor(any())).thenReturn(Collections.emptyList());
+            when(postRepository.countByAuthor(any())).thenReturn(0L);
             when(followRepository.existsByFollower_IdAndFollowing_Id(testUser1.getId(), testUser2.getId()))
                     .thenReturn(true);
 
@@ -356,7 +356,7 @@ class UserServiceTest {
                     .thenReturn(Arrays.asList(testUser2, testUser3));
             when(followRepository.countByFollowing_Id(any())).thenReturn(5L);
             when(followRepository.countByFollower_Id(any())).thenReturn(3L);
-            when(postRepository.findByAuthor(any())).thenReturn(Collections.emptyList());
+            when(postRepository.countByAuthor(any())).thenReturn(0L);
 
             List<UserDTO> followers = userService.getFollowers(testUser1.getId());
 
@@ -390,7 +390,7 @@ class UserServiceTest {
                     .thenReturn(Arrays.asList(testUser2, testUser3));
             when(followRepository.countByFollowing_Id(any())).thenReturn(10L);
             when(followRepository.countByFollower_Id(any())).thenReturn(8L);
-            when(postRepository.findByAuthor(any())).thenReturn(Collections.emptyList());
+            when(postRepository.countByAuthor(any())).thenReturn(0L);
 
             List<UserDTO> following = userService.getFollowing(testUser1.getId());
 
@@ -504,7 +504,7 @@ class UserServiceTest {
             when(userRepository.findById(testUser1.getId())).thenReturn(Optional.of(testUser1));
             when(followRepository.countByFollowing_Id(any())).thenReturn(1_000_000L);
             when(followRepository.countByFollower_Id(any())).thenReturn(500_000L);
-            when(postRepository.findByAuthor(any())).thenReturn(Collections.emptyList());
+            when(postRepository.countByAuthor(any())).thenReturn(0L);
 
             Optional<UserDTO> result = userService.getUserById(testUser1.getId());
 
@@ -528,7 +528,7 @@ class UserServiceTest {
             when(userRepository.findById(newUser.getId())).thenReturn(Optional.of(newUser));
             when(followRepository.countByFollowing_Id(any())).thenReturn(0L);
             when(followRepository.countByFollower_Id(any())).thenReturn(0L);
-            when(postRepository.findByAuthor(any())).thenReturn(Collections.emptyList());
+            when(postRepository.countByAuthor(any())).thenReturn(0L);
 
             Optional<UserDTO> result = userService.getUserById(newUser.getId());
 
@@ -551,7 +551,7 @@ class UserServiceTest {
             when(userRepository.findById(minimalUser.getId())).thenReturn(Optional.of(minimalUser));
             when(followRepository.countByFollowing_Id(any())).thenReturn(0L);
             when(followRepository.countByFollower_Id(any())).thenReturn(0L);
-            when(postRepository.findByAuthor(any())).thenReturn(Collections.emptyList());
+            when(postRepository.countByAuthor(any())).thenReturn(0L);
 
             Optional<UserDTO> result = userService.getUserById(minimalUser.getId());
 

@@ -16,7 +16,7 @@ public class Post {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
-    @Column(length = 280, nullable = false)
+    @Column(length = 280)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)

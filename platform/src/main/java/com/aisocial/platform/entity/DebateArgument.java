@@ -2,7 +2,6 @@ package com.aisocial.platform.entity;
 
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -86,9 +85,4 @@ public class DebateArgument {
 
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
-
-    public Optional<DebateArgument> map(Object object) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'map'");
-    }
 }
