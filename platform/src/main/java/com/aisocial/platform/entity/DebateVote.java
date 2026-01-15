@@ -12,7 +12,7 @@ public class DebateVote {
 
     @Id
     @GeneratedValue
-    @Column(name = "id")
+    @Column(name = "id", columnDefinition = "VARCHAR(36)")
     private UUID id;
 
     @Column(name = "debate_id", nullable = false)

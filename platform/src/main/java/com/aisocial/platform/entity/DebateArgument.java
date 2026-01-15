@@ -12,6 +12,7 @@ public class DebateArgument {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "VARCHAR(36)")
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
