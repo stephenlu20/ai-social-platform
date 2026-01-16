@@ -45,8 +45,7 @@ function MainFeed() {
       setPosts(sortedFeed);
     } else if (activeTab === 'debates') {
       const activeDebates = await debateService.getActiveDebates();
-      const votingDebates = await debateService.getVotingDebates();
-      const allDebates = [...activeDebates, ...votingDebates];
+      const allDebates = [...activeDebates];
       const sortedDebates = allDebates.sort((a, b) => 
         new Date(b.createdAt) - new Date(a.createdAt)
       );
