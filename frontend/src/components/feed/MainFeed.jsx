@@ -6,7 +6,7 @@ import Tweet from './Tweet';
 
 function MainFeed() {
   const { currentUser } = useUser();
-  const [activeTab, setActiveTab] = useState('forYou');
+  const [activeTab, setActiveTab] = useState('following');
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,15 +15,29 @@ function MainFeed() {
     if (currentUser) {
       loadPosts();
     }
-  }, [currentUser]);
+  }, [currentUser, activeTab]);
 
   const loadPosts = async () => {
     try {
       setLoading(true);
       setError(null);
-      const feed = await postService.getFeed(currentUser.id);
+      
+      let feed;
+      if (activeTab === 'following') {
+        // Load posts from users you follow
+        feed = await postService.getFeed(currentUser.id);
+      } else if (activeTab === 'yourPosts') {
+        // Load your own posts
+        feed = await postService.searchPosts({
+          authorId: currentUser.id,
+          page: 0,
+          size: 50
+        });
+        feed = feed.content || [];
+      }
+      
       const sortedFeed = feed.sort((a, b) => 
-      new Date(b.createdAt) - new Date(a.createdAt)
+        new Date(b.createdAt) - new Date(a.createdAt)
       );
 
       setPosts(sortedFeed);
@@ -79,18 +93,9 @@ function MainFeed() {
 
   return (
     <div className="bg-white/[0.03] rounded-3xl overflow-hidden backdrop-blur-[10px] border border-white/10">
+      {/* Tabs */}
       <div className="flex sticky top-0 bg-[rgba(15,5,25,0.95)] backdrop-blur-[20px] z-10 
                       p-2 border-b border-white/10">
-        <div 
-          className={`flex-1 p-3.5 text-center font-bold cursor-pointer relative 
-                     text-[15px] rounded-xl transition-all duration-300
-                     ${activeTab === 'forYou' 
-                       ? 'text-white bg-gradient-to-br from-veritas-pink/20 to-veritas-purple/20' 
-                       : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
-          onClick={() => setActiveTab('forYou')}
-        >
-          For You
-        </div>
         <div 
           className={`flex-1 p-3.5 text-center font-bold cursor-pointer relative 
                      text-[15px] rounded-xl transition-all duration-300
@@ -104,25 +109,16 @@ function MainFeed() {
         <div 
           className={`flex-1 p-3.5 text-center font-bold cursor-pointer relative 
                      text-[15px] rounded-xl transition-all duration-300
-                     ${activeTab === 'trending' 
+                     ${activeTab === 'yourPosts' 
                        ? 'text-white bg-gradient-to-br from-veritas-pink/20 to-veritas-purple/20' 
                        : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
-          onClick={() => setActiveTab('trending')}
+          onClick={() => setActiveTab('yourPosts')}
         >
-          Trending
+          Your Posts
         </div>
       </div>
 
       <ComposeBox onPostCreated={handlePostCreated} />
-
-      <div className="p-4 bg-veritas-pink/5 border-b border-white/10">
-        <div className="text-[13px] font-bold text-veritas-coral mb-2">
-          📚 REAL DATA LOADED:
-        </div>
-        <div className="text-xs text-white/70 leading-relaxed">
-          You're now seeing <strong className="text-white font-semibold">real posts</strong> from your database!
-        </div>
-      </div>
 
       {loading && (
         <div className="p-20 text-center text-white/50">
@@ -138,21 +134,25 @@ function MainFeed() {
 
       {!loading && !error && posts.length === 0 && (
         <div className="p-20 text-center text-white/50">
-          No posts yet. Create the first one!
+          {activeTab === 'following' 
+            ? 'No posts from people you follow yet. Follow some users to see their posts here!'
+            : "You haven't posted anything yet. Create your first post above!"}
         </div>
       )}
 
-      <div>
-        {posts.map(post => (
-          <Tweet 
-            key={post.id} 
-            post={post}
-            currentUserId={currentUser.id}
-            onPostUpdated={handlePostUpdated}
-            onAuthorFollowChange={handleAuthorFollowChange}
-          />
-        ))}
-      </div>
+      {!loading && !error && posts.length > 0 && (
+        <div>
+          {posts.map(post => (
+            <Tweet 
+              key={post.id} 
+              post={post}
+              currentUserId={currentUser.id}
+              onPostUpdated={handlePostUpdated}
+              onAuthorFollowChange={handleAuthorFollowChange}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
