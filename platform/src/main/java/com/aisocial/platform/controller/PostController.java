@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,9 +115,25 @@ public class PostController {
     }
 
     @GetMapping("/{postId}/replies")
-    public ResponseEntity<List<Post>> getReplies(@PathVariable UUID postId) {
+    public ResponseEntity<List<PostResponseDTO>> getReplies(
+            @PathVariable UUID postId,
+            @RequestHeader(value = "X-User-Id", required = false) UUID currentUserId) {
         List<Post> replies = postService.getReplies(postId);
-        return ResponseEntity.ok(replies);
+        
+        // Convert to DTOs with proper user context
+        List<PostResponseDTO> replyDTOs = replies.stream()
+            .map(post -> {
+                // You'll need access to convertToDTO method
+                // Option 1: Make it public in PostService
+                // Option 2: Call through PostService
+                // Option 3: Duplicate logic here (not ideal)
+                
+                // For now, let's assume we add a method to PostService:
+                return postService.convertPostToDTO(post, currentUserId);
+            })
+            .collect(Collectors.toList());
+        
+        return ResponseEntity.ok(replyDTOs);
     }
 
     @PostMapping("/search")

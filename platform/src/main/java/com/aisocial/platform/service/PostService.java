@@ -39,4 +39,6 @@ public interface PostService {
     List<Post> getReplies(UUID postId);
 
     Page<PostResponseDTO> searchPosts(PostSearchRequestDTO request);
+
+    PostResponseDTO convertPostToDTO(Post post, UUID currentUserId);
 }

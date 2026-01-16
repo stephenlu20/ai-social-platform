@@ -1,5 +1,3 @@
-
-
 import api from './api';
 
 const postService = {
@@ -51,7 +49,22 @@ const postService = {
 
   getReplies: async (postId) => {
     const response = await api.get(`posts/${postId}/replies`);
-    return response.data;
+    // Backend returns List<Post>, we need to convert to proper format
+    // The backend should ideally return PostResponseDTO, but if it returns Post entities,
+    // we need to transform them
+    return response.data.map(reply => ({
+      id: reply.id,
+      author: reply.author,
+      content: reply.content,
+      createdAt: reply.createdAt,
+      likeCount: reply.likeCount || 0,
+      replyCount: reply.replyCount || 0,
+      repostCount: reply.repostCount || 0,
+      replyToId: reply.replyTo?.id || reply.replyToId,
+      isLikedByCurrentUser: reply.isLikedByCurrentUser || false,
+      factCheckStatus: reply.factCheckStatus,
+      factCheckScore: reply.factCheckScore
+    }));
   },
 
   deletePost: async (userId, postId) => {

@@ -260,4 +260,9 @@ public class PostServiceImpl implements PostService {
         
         return dto;
     }
+
+    @Override
+    public PostResponseDTO convertPostToDTO(Post post, UUID currentUserId) {
+        return convertToDTO(post, currentUserId);
+    }
 }
