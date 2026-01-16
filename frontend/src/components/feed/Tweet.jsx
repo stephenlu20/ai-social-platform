@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import postService from '../../services/postService';
 import followService from '../../services/followService';
+import ReplyModal from './ReplyModal';
 
 function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, depth = 0 }) {
   const [isLiked, setIsLiked] = useState(post.isLikedByCurrentUser || false);
@@ -279,6 +280,18 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, depth
         <div className="py-4 text-center text-white/30 text-sm italic" style={{ paddingLeft: `${20 + leftPadding + 40}px` }}>
           No replies yet
         </div>
+      )}
+
+      {showReplyModal && (
+        <ReplyModal
+          post={post}
+          currentUserId={currentUserId}
+          onClose={handleCloseReplyModal}
+          onReplyCreated={() => {
+            handleCloseReplyModal();
+            if (onPostUpdated) onPostUpdated();
+          }}
+        />
       )}
     </div>
   );
