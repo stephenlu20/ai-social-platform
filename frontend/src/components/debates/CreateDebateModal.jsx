@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useUser } from '../../context/UserContext';
 import debateService from '../../services/debateService';
 
@@ -48,8 +49,8 @@ function CreateDebateModal({ isOpen, onClose, onDebateCreated }) {
 
   const availableOpponents = allUsers.filter(u => u.id !== currentUser.id);
 
-  return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  const modalContent = (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
       <div className="bg-gradient-to-br from-[#1a3a52] to-[#234562] border-2 border-white/20 
                       rounded-3xl max-w-2xl w-full p-8 shadow-2xl">
         <div className="flex items-center justify-between mb-6">
@@ -132,6 +133,8 @@ function CreateDebateModal({ isOpen, onClose, onDebateCreated }) {
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }
 
 export default CreateDebateModal;
