@@ -154,37 +154,38 @@ function MainFeed() {
         </div>
       )}
 
+      {!loading && !error && activeTab === 'debates' && debates.length === 0 && (
+        <div className="p-20 text-center text-white/50">
+          No active debates. Create a debate challenge to get started!
+        </div>
+      )}
+
+      {!loading && !error && activeTab !== 'debates' && posts.length > 0 && (
+        <div>
+          {posts.map(post => (
+            <Tweet 
+              key={post.id} 
+              post={post}
+              currentUserId={currentUser.id}
+              onPostUpdated={handlePostUpdated}
+              onAuthorFollowChange={handleAuthorFollowChange}
+            />
+          ))}
+        </div>
+      )}
+
+      {!loading && !error && activeTab === 'debates' && debates.length > 0 && (
+        <div>
+          {debates.map(debate => (
+            <DebateCard 
+              key={debate.id} 
+              debate={debate}
+              onDebateUpdated={loadPosts}
+            />
+          ))}
+        </div>
+      )}
   </div>
 )}
 
-{!loading && !error && activeTab === 'debates' && debates.length === 0 && (
-  <div className="p-20 text-center text-white/50">
-    No active debates. Create a debate challenge to get started!
-  </div>
-)}
-
-{!loading && !error && activeTab !== 'debates' && posts.length > 0 && (
-  <div>
-    {posts.map(post => (
-      <Tweet 
-        key={post.id} 
-        post={post}
-        currentUserId={currentUser.id}
-        onPostUpdated={handlePostUpdated}
-        onAuthorFollowChange={handleAuthorFollowChange}
-      />
-    ))}
-  </div>
-)}
-
-{!loading && !error && activeTab === 'debates' && debates.length > 0 && (
-  <div>
-    {debates.map(debate => (
-      <DebateCard 
-        key={debate.id} 
-        debate={debate}
-        onDebateUpdated={loadPosts}
-      />
-    ))}
-  </div>
-)}
+export default MainFeed;
