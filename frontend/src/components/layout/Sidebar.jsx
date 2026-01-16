@@ -3,9 +3,12 @@
 import React from 'react';
 import { useUser } from '../../context/UserContext';
 import HelpBadge from '../common/HelpBadge';
+import { useState } from 'react';
+import CreateDebateModal from '../debates/CreateDebateModal';
 
 function Sidebar() {
   const { currentUser, allUsers, loading, switchUser } = useUser();
+  const [isDebateModalOpen, setIsDebateModalOpen] = useState(false);
 
   const navItems = [
     { icon: '🏠', label: 'Home', badge: null },
