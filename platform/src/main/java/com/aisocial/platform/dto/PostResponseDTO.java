@@ -19,6 +19,7 @@ public class PostResponseDTO {
     private FactCheckStatus factCheckStatus;
     private Double factCheckScore;
     private Boolean isLikedByCurrentUser;
+    private Boolean isRepostedByCurrentUser;
     private FactCheckResultDTO factCheckResult;
 
     public PostResponseDTO() {}
@@ -61,6 +62,9 @@ public class PostResponseDTO {
     
     public Boolean getIsLikedByCurrentUser() { return isLikedByCurrentUser; }
     public void setIsLikedByCurrentUser(Boolean isLikedByCurrentUser) { this.isLikedByCurrentUser = isLikedByCurrentUser; }
+
+    public Boolean getIsRepostedByCurrentUser() { return isRepostedByCurrentUser; }
+    public void setIsRepostedByCurrentUser(Boolean isRepostedByCurrentUser) { this.isRepostedByCurrentUser = isRepostedByCurrentUser; }
 
     public FactCheckResultDTO getFactCheckResult() { return factCheckResult; }
     public void setFactCheckResult(FactCheckResultDTO factCheckResult) { this.factCheckResult = factCheckResult; }

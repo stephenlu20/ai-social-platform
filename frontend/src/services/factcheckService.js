@@ -2,6 +2,20 @@
 import api from './api';
 
 const factCheckService = {
+  // Preview fact-check without saving (for pre-publish flow)
+  preview: async (content) => {
+    const response = await api.post('/api/fact-checks/preview', { content });
+    return response.data;
+  },
+
+  // Fact-check an existing post
+  checkPost: async (postId, userId) => {
+    const response = await api.post(`/api/fact-checks/post/${postId}`, null, {
+      headers: userId ? { 'X-User-Id': userId } : {}
+    });
+    return response.data;
+  },
+
   getAll: async () => {
     const response = await api.get('/api/fact-checks');
     return response.data;

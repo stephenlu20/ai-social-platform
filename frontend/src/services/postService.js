@@ -6,10 +6,11 @@ const postService = {
     return response.data;
   },
 
-  createPost: async (userId, content) => {
+  createPost: async (userId, content, factCheck = false) => {
     const response = await api.post('posts', {
       userId: userId,
-      content: content
+      content: content,
+      factCheck: factCheck
     });
     return response.data;
   },

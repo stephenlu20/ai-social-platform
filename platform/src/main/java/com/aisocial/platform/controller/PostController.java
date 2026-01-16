@@ -81,24 +81,26 @@ public class PostController {
      * Reply to an existing post
      */
     @PostMapping("/{postId}/reply")
-    public ResponseEntity<Post> replyToPost(
+    public ResponseEntity<PostResponseDTO> replyToPost(
             @PathVariable UUID postId,
             @RequestBody ReplyPostRequestDTO request
     ) {
         Post reply = postService.replyToPost(request.getUserId(), postId, request.getContent());
-        return new ResponseEntity<>(reply, HttpStatus.CREATED);
+        PostResponseDTO dto = postService.convertPostToDTO(reply, request.getUserId());
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     /**
      * Repost an existing post
      */
     @PostMapping("/{postId}/repost")
-    public ResponseEntity<Post> repost(
+    public ResponseEntity<PostResponseDTO> repost(
             @PathVariable UUID postId,
             @RequestBody RepostRequestDTO request
     ) {
         Post repost = postService.repost(request.getUserId(), postId);
-        return new ResponseEntity<>(repost, HttpStatus.CREATED);
+        PostResponseDTO dto = postService.convertPostToDTO(repost, request.getUserId());
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     /**

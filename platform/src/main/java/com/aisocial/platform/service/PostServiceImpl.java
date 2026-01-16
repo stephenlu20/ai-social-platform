@@ -327,7 +327,15 @@ public class PostServiceImpl implements PostService {
         } else {
             dto.setIsLikedByCurrentUser(false);
         }
-        
+
+        // Check if current user reposted this post
+        if (currentUserId != null) {
+            boolean reposted = postRepository.existsByAuthor_IdAndRepostOf_Id(currentUserId, post.getId());
+            dto.setIsRepostedByCurrentUser(reposted);
+        } else {
+            dto.setIsRepostedByCurrentUser(false);
+        }
+
         return dto;
     }
 
