@@ -1,6 +1,5 @@
 package com.aisocial.platform.controller;
 
-import com.aisocial.platform.entity.Like;
 import com.aisocial.platform.entity.Post;
 import com.aisocial.platform.service.PostService;
 import com.aisocial.platform.service.LikeService;
