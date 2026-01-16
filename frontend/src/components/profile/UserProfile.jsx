@@ -57,6 +57,28 @@ function UserProfile({ username }) {
     }));
   };
 
+  // Update post state without reloading
+  const handlePostUpdated = (updatedPost) => {
+    if (updatedPost) {
+      setPosts(prevPosts => 
+        prevPosts.map(post => 
+          post.id === updatedPost.id ? updatedPost : post
+        )
+      );
+      setReplies(prevReplies => 
+        prevReplies.map(post => 
+          post.id === updatedPost.id ? updatedPost : post
+        )
+      );
+    }
+  };
+
+  // This won't be called from UserProfile's own posts since they're all by the same author
+  // But included for consistency with MainFeed
+  const handleAuthorFollowChange = (authorId, isNowFollowing) => {
+    // No-op for UserProfile since all posts are by the profile owner
+  };
+
   if (loading) {
     return (
       <div className="bg-white/[0.03] rounded-3xl overflow-hidden backdrop-blur-[10px] border border-white/10 p-20 text-center">
@@ -180,7 +202,8 @@ function UserProfile({ username }) {
                   key={post.id}
                   post={post}
                   currentUserId={currentUser?.id}
-                  onPostUpdated={loadUserProfile}
+                  onPostUpdated={handlePostUpdated}
+                  onAuthorFollowChange={handleAuthorFollowChange}
                 />
               ))
             )}
@@ -199,7 +222,8 @@ function UserProfile({ username }) {
                   key={post.id}
                   post={post}
                   currentUserId={currentUser?.id}
-                  onPostUpdated={loadUserProfile}
+                  onPostUpdated={handlePostUpdated}
+                  onAuthorFollowChange={handleAuthorFollowChange}
                 />
               ))
             )}

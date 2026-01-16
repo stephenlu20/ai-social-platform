@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../../context/UserContext';
 import postService from '../../services/postService';
@@ -38,6 +37,35 @@ function MainFeed() {
 
   const handlePostCreated = () => {
     loadPosts();
+  };
+
+  // Update local post state without reloading from server
+  const handlePostUpdated = (updatedPost) => {
+    if (updatedPost) {
+      setPosts(prevPosts => 
+        prevPosts.map(post => 
+          post.id === updatedPost.id ? updatedPost : post
+        )
+      );
+    }
+  };
+
+  // Update author follow state across all posts by that author
+  const handleAuthorFollowChange = (authorId, isNowFollowing) => {
+    setPosts(prevPosts =>
+      prevPosts.map(post => {
+        if (post.author.id === authorId) {
+          return {
+            ...post,
+            author: {
+              ...post.author,
+              isFollowing: isNowFollowing
+            }
+          };
+        }
+        return post;
+      })
+    );
   };
 
   if (!currentUser) {
@@ -120,7 +148,8 @@ function MainFeed() {
             key={post.id} 
             post={post}
             currentUserId={currentUser.id}
-            onPostUpdated={loadPosts}
+            onPostUpdated={handlePostUpdated}
+            onAuthorFollowChange={handleAuthorFollowChange}
           />
         ))}
       </div>

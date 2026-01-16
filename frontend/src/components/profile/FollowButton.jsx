@@ -4,6 +4,7 @@ import followService from '../../services/followService';
 function FollowButton({ targetUser, currentUserId, initialIsFollowing = false, onFollowChange }) {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [isLoading, setIsLoading] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
   const handleFollowToggle = async (e) => {
     e.preventDefault();
@@ -14,16 +15,13 @@ function FollowButton({ targetUser, currentUserId, initialIsFollowing = false, o
     try {
       setIsLoading(true);
       
-      if (isFollowing) {
-        await followService.unfollowUser(currentUserId, targetUser.id);
-        setIsFollowing(false);
-      } else {
-        await followService.followUser(currentUserId, targetUser.id);
-        setIsFollowing(true);
-      }
+      // Use the toggle endpoint
+      const response = await followService.toggleFollow(currentUserId, targetUser.id);
+      
+      setIsFollowing(response.following);
 
       if (onFollowChange) {
-        onFollowChange(!isFollowing);
+        onFollowChange(response.following);
       }
     } catch (error) {
       console.error('Error toggling follow:', error);
@@ -38,9 +36,19 @@ function FollowButton({ targetUser, currentUserId, initialIsFollowing = false, o
     return null;
   }
 
+  // Determine button text
+  const getButtonText = () => {
+    if (isLoading) return 'Loading...';
+    if (isFollowing && isHovering) return 'Unfollow';
+    if (isFollowing) return 'Following';
+    return 'Follow';
+  };
+
   return (
     <button
       onClick={handleFollowToggle}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
       disabled={isLoading}
       className={`
         px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-300
@@ -51,7 +59,7 @@ function FollowButton({ targetUser, currentUserId, initialIsFollowing = false, o
         }
       `}
     >
-      {isLoading ? 'Loading...' : (isFollowing ? 'Following' : 'Follow')}
+      {getButtonText()}
     </button>
   );
 }

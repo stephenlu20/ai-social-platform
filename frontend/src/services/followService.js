@@ -1,11 +1,20 @@
-
 import api from './api';
 
 const followService = {
-  followUser: async (currentUserId, targetUserId) => {
-    await api.post(`/api/users/${targetUserId}/follow`, null, {
+  // New toggle method - simpler API like the like button
+  toggleFollow: async (currentUserId, targetUserId) => {
+    const response = await api.post(`/api/users/${targetUserId}/follow`, null, {
       headers: { 'X-User-Id': currentUserId }
     });
+    return response.data; // Returns { following: boolean, followerCount: number }
+  },
+
+  // Legacy methods kept for backwards compatibility
+  followUser: async (currentUserId, targetUserId) => {
+    const response = await api.post(`/api/users/${targetUserId}/follow`, null, {
+      headers: { 'X-User-Id': currentUserId }
+    });
+    return response.data;
   },
 
   unfollowUser: async (currentUserId, targetUserId) => {
