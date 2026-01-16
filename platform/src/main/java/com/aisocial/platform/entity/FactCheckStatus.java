@@ -5,5 +5,6 @@ public enum FactCheckStatus {
     LIKELY_TRUE,
     DISPUTED,
     FALSE,
+    UNVERIFIABLE,
     UNCHECKED
 }

@@ -1,21 +1,56 @@
 package com.aisocial.platform.controller;
 
+import com.aisocial.platform.dto.FactCheckResultDTO;
 import com.aisocial.platform.entity.FactCheck;
+import com.aisocial.platform.service.AIFactCheckService;
 import com.aisocial.platform.service.FactCheckService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/fact-checks")
+@CrossOrigin(origins = "*")
 public class FactCheckController {
 
     private final FactCheckService factCheckService;
+    private final AIFactCheckService aiFactCheckService;
 
-    public FactCheckController(FactCheckService factCheckService) {
+    public FactCheckController(FactCheckService factCheckService,
+                               AIFactCheckService aiFactCheckService) {
         this.factCheckService = factCheckService;
+        this.aiFactCheckService = aiFactCheckService;
+    }
+
+    // ----------------------------
+    // AI-Powered Fact Check - Preview (before posting)
+    // ----------------------------
+    @PostMapping("/preview")
+    public ResponseEntity<FactCheckResultDTO> previewFactCheck(@RequestBody Map<String, String> request) {
+        String content = request.get("content");
+        if (content == null || content.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(FactCheckResultDTO.error("Content is required"));
+        }
+        FactCheckResultDTO result = aiFactCheckService.previewFactCheck(content);
+        return ResponseEntity.ok(result);
+    }
+
+    // ----------------------------
+    // AI-Powered Fact Check - Check existing post
+    // ----------------------------
+    @PostMapping("/post/{postId}")
+    public ResponseEntity<FactCheckResultDTO> factCheckPost(
+            @PathVariable UUID postId,
+            @RequestHeader(value = "X-User-Id", required = false) UUID userId) {
+        try {
+            FactCheckResultDTO result = aiFactCheckService.factCheckPost(postId, userId);
+            return ResponseEntity.ok(result);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // ----------------------------

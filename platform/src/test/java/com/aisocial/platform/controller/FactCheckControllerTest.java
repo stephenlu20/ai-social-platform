@@ -2,6 +2,7 @@ package com.aisocial.platform.controller;
 
 import com.aisocial.platform.entity.FactCheck;
 import com.aisocial.platform.entity.FactCheckStatus;
+import com.aisocial.platform.service.AIFactCheckService;
 import com.aisocial.platform.service.FactCheckService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,12 +23,14 @@ import static org.mockito.Mockito.*;
 class FactCheckControllerTest {
 
     private FactCheckService service;
+    private AIFactCheckService aiFactCheckService;
     private FactCheckController controller;
 
     @BeforeEach
     void setUp() {
         service = Mockito.mock(FactCheckService.class);
-        controller = new FactCheckController(service);
+        aiFactCheckService = Mockito.mock(AIFactCheckService.class);
+        controller = new FactCheckController(service, aiFactCheckService);
     }
 
     @Test
