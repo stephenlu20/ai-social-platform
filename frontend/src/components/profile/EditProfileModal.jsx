@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { useUser } from '../../context/UserContext';
 import userService from '../../services/userService';
 
@@ -38,9 +39,17 @@ function EditProfileModal({ isOpen, onClose }) {
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
-      <div className="w-full max-w-md mx-4 bg-[#0f0f0f] rounded-2xl border border-white/10">
+  return ReactDOM.createPortal(
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
+      {/* Modal */}
+      <div className="relative z-[1001] w-full max-w-md mx-4
+                      bg-[#0f0f0f] rounded-2xl border border-white/10">
         <div className="px-5 py-4 border-b border-white/10 font-bold">
           Edit Profile
         </div>
@@ -86,7 +95,8 @@ function EditProfileModal({ isOpen, onClose }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
