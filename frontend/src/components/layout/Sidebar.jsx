@@ -106,11 +106,22 @@ function Sidebar({ onNavigateToProfile, onNavigateToSearch }) {
 
         {/* AI Studio */}
         <div className="flex items-center gap-4 px-5 py-3.5 rounded-2xl mx-3 mb-2 mt-5
-                        cursor-pointer text-[17px] font-bold transition-all duration-300
-                        bg-gradient-to-br from-veritas-purple/20 to-veritas-pink/20 
-                        border-2 border-veritas-pink/30">
-          <div className="w-6 h-6 text-[22px]">✨</div>
-          <div>AI Studio</div>
+                cursor-pointer text-[17px] font-bold transition-all duration-300
+                bg-gradient-to-br from-veritas-purple/20 to-veritas-pink/20 
+                border-2 border-veritas-pink/30">
+  <div className="w-6 h-6 text-[22px]">✨</div>
+  <div>AI Studio</div>
+</div>
+
+{/* Create Debate Button */}
+<div 
+  onClick={() => setIsDebateModalOpen(true)}
+  className="flex items-center gap-4 px-5 py-3.5 rounded-2xl mx-3 mb-2
+             cursor-pointer text-[17px] font-bold transition-all duration-300
+             bg-gradient-to-br from-red-500/20 to-orange-500/20 
+             border-2 border-red-500/30 hover:bg-red-500/30">
+  <div className="w-6 h-6 text-[22px]">⚔️</div>
+  <div>Create Debate</div>
         </div>
       </nav>
 
