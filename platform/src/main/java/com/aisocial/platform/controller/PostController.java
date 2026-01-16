@@ -47,6 +47,15 @@ public class PostController {
     }
 
     /**
+     * Get all posts by a specific user
+     */
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<PostResponseDTO>> getPostsByUser(@PathVariable UUID userId) {
+        List<PostResponseDTO> posts = postService.getPostsByUserId(userId);
+        return ResponseEntity.ok(posts);
+    }
+
+    /**
      * Reply to an existing post
      */
     @PostMapping("/{postId}/reply")

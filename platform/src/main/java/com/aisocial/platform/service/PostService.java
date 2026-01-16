@@ -24,6 +24,8 @@ public interface PostService {
 
     List<Post> getPostsByUser(User user);
 
+    List<PostResponseDTO> getPostsByUserId(UUID userId);
+
     void likePost(Post post);
 
     void incrementReplyCount(Post post);
