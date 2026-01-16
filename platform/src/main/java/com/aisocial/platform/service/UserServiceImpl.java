@@ -1,5 +1,6 @@
 package com.aisocial.platform.service;
 
+import com.aisocial.platform.dto.UpdateUserRequestDTO;
 import com.aisocial.platform.dto.UserDTO;
 import com.aisocial.platform.dto.UserResponseDTO;
 import com.aisocial.platform.dto.UserSearchRequestDTO;
@@ -130,6 +131,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public long getFollowingCount(UUID userId) {
         return followRepository.countByFollower_Id(userId);
+    }
+
+    @Override
+    @Transactional
+    public UserDTO updateUser(UUID userId, UpdateUserRequestDTO request) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (request.getDisplayName() != null) {
+            user.setDisplayName(request.getDisplayName());
+        }
+
+        if (request.getBio() != null) {
+            user.setBio(request.getBio());
+        }
+
+        User savedUser = userRepository.save(user);
+        return new UserDTO(savedUser);
     }
 
     private UserDTO toEnrichedDTO(User user) {

@@ -1,5 +1,6 @@
 package com.aisocial.platform.service;
 
+import com.aisocial.platform.dto.UpdateUserRequestDTO;
 import com.aisocial.platform.dto.UserDTO;
 import com.aisocial.platform.dto.UserResponseDTO;
 import com.aisocial.platform.dto.UserSearchRequestDTO;
@@ -36,4 +37,6 @@ public interface UserService {
     long getFollowingCount(UUID userId);
     
     Page<UserResponseDTO> searchUsers(UserSearchRequestDTO request);
+
+    UserDTO updateUser(UUID userId, UpdateUserRequestDTO request);
 }

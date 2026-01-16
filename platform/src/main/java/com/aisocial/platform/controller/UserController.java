@@ -1,5 +1,6 @@
 package com.aisocial.platform.controller;
 
+import com.aisocial.platform.dto.UpdateUserRequestDTO;
 import com.aisocial.platform.dto.UserDTO;
 import com.aisocial.platform.entity.User;
 import com.aisocial.platform.repository.UserRepository;
@@ -60,6 +61,15 @@ public class UserController {
         return userRepository.findById(id)
                 .map(user -> ResponseEntity.ok(new TrustBreakdownDTO(user)))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> updateUser(
+            @PathVariable UUID id,
+            @RequestBody UpdateUserRequestDTO request
+    ) {
+        UserDTO updatedUser = userService.updateUser(id, request);
+        return ResponseEntity.ok(updatedUser);
     }
 
     public static class TrustBreakdownDTO {
