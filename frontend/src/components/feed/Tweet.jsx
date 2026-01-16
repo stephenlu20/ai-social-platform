@@ -9,6 +9,7 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, depth
   const [isFollowing, setIsFollowing] = useState(post.author?.isFollowing || false);
   const [isFollowLoading, setIsFollowLoading] = useState(false);
   const [isFollowHovering, setIsFollowHovering] = useState(false);
+  const [showReplyModal, setShowReplyModal] = useState(false);
   
   // Reply state
   const [replies, setReplies] = useState([]);
@@ -127,6 +128,16 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, depth
     }
   };
 
+  const handleOpenReplyModal = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowReplyModal(true);
+  };
+
+  const handleCloseReplyModal = () => {
+    setShowReplyModal(false);
+  };
+
   const isOwnPost = currentUserId === author?.id;
 
   // Indent for nested replies (max depth to prevent too much nesting)
@@ -227,6 +238,14 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, depth
                                text-inherit text-[13px] font-semibold
                                hover:text-veritas-pink hover:bg-veritas-pink/10">
               <span className="text-lg">🔗</span>
+            </button>
+            <button
+              onClick={handleOpenReplyModal}
+              className="ml-auto px-4 py-1.5 rounded-full font-bold text-xs transition-all duration-300
+                        disabled:opacity-50 disabled:cursor-not-allowed
+                        bg-gradient-to-br from-veritas-pink to-veritas-pink-dark text-white border border-transparent hover:shadow-[0_4px_12px_rgba(255,107,157,0.3)]"
+            >
+              <span className="text-lg">Reply</span>
             </button>
           </div>
         </div>
