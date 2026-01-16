@@ -21,36 +21,44 @@ function MainFeed() {
   }, [currentUser, activeTab]);
 
   const loadPosts = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      let feed;
-      if (activeTab === 'following') {
-        // Load posts from users you follow
-        feed = await postService.getFeed(currentUser.id);
-      } else if (activeTab === 'yourPosts') {
-        // Load your own posts
-        feed = await postService.searchPosts({
-          authorId: currentUser.id,
-          page: 0,
-          size: 50
-        });
-        feed = feed.content || [];
-      }
-      
+  try {
+    setLoading(true);
+    setError(null);
+    
+    let feed;
+    if (activeTab === 'following') {
+      feed = await postService.getFeed(currentUser.id);
       const sortedFeed = feed.sort((a, b) => 
         new Date(b.createdAt) - new Date(a.createdAt)
       );
-
       setPosts(sortedFeed);
-    } catch (err) {
-      console.error('Error loading posts:', err);
-      setError('Failed to load posts');
-    } finally {
-      setLoading(false);
+    } else if (activeTab === 'yourPosts') {
+      feed = await postService.searchPosts({
+        authorId: currentUser.id,
+        page: 0,
+        size: 50
+      });
+      feed = feed.content || [];
+      const sortedFeed = feed.sort((a, b) => 
+        new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setPosts(sortedFeed);
+    } else if (activeTab === 'debates') {
+      const activeDebates = await debateService.getActiveDebates();
+      const votingDebates = await debateService.getVotingDebates();
+      const allDebates = [...activeDebates, ...votingDebates];
+      const sortedDebates = allDebates.sort((a, b) => 
+        new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setDebates(sortedDebates);
     }
-  };
+  } catch (err) {
+    console.error('Error loading posts:', err);
+    setError('Failed to load content');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handlePostCreated = () => {
     loadPosts();
