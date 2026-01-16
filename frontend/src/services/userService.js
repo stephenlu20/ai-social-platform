@@ -1,4 +1,3 @@
-
 import api from './api';
 
 const userService = {
@@ -30,6 +29,11 @@ const userService = {
     const response = await api.get(`api/users/${userId}/trust-breakdown`);
     return response.data;
   },
+
+  updateUser: async (userId, payload) => {
+    const response = await api.put(`api/users/${userId}`, payload);
+    return response.data;
+  }
 };
 
 export default userService;
