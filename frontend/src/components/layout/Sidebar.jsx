@@ -1,20 +1,30 @@
-
-
 import React from 'react';
 import { useUser } from '../../context/UserContext';
 import HelpBadge from '../common/HelpBadge';
 
-function Sidebar() {
+function Sidebar({ onNavigateToProfile, onNavigateToSearch }) {
   const { currentUser, allUsers, loading, switchUser } = useUser();
 
+  const handleProfileClick = () => {
+    if (currentUser && onNavigateToProfile) {
+      onNavigateToProfile(currentUser.id);
+    }
+  };
+
+  const handleExploreClick = () => {
+    if (onNavigateToSearch) {
+      onNavigateToSearch();
+    }
+  };
+
   const navItems = [
-    { icon: '🏠', label: 'Home', badge: null },
-    { icon: '🌍', label: 'Explore', badge: null },
-    { icon: '💬', label: 'Messages', badge: null },
-    { icon: '👥', label: 'Groups', badge: null },
-    { icon: '⭐', label: 'Bookmarks', badge: null },
-    { icon: '👤', label: 'Profile', badge: null },
-    { icon: '🤝', label: 'Friends', badge: null },
+    { icon: '🏠', label: 'Home', badge: null, onClick: null },
+    { icon: '🌍', label: 'Explore', badge: null, onClick: handleExploreClick },
+    { icon: '💬', label: 'Messages', badge: null, onClick: null },
+    { icon: '👥', label: 'Groups', badge: null, onClick: null },
+    { icon: '⭐', label: 'Bookmarks', badge: null, onClick: null },
+    { icon: '👤', label: 'Profile', badge: null, onClick: handleProfileClick },
+    { icon: '🤝', label: 'Friends', badge: null, onClick: null },
   ];
 
   if (loading) {
@@ -74,9 +84,11 @@ function Sidebar() {
         {navItems.map((item, index) => (
           <div 
             key={index} 
-            className="flex items-center gap-4 px-5 py-3.5 rounded-2xl mx-3 mb-2 
-                       cursor-pointer text-[17px] font-semibold transition-all duration-300 
-                       hover:bg-veritas-pink/15 hover:translate-x-1"
+            onClick={item.onClick}
+            className={`flex items-center gap-4 px-5 py-3.5 rounded-2xl mx-3 mb-2 
+                       text-[17px] font-semibold transition-all duration-300 
+                       hover:bg-veritas-pink/15 hover:translate-x-1
+                       ${item.onClick ? 'cursor-pointer' : 'cursor-default'}`}
           >
             <div className="w-6 h-6 text-[22px]">{item.icon}</div>
             <div>{item.label}</div>
@@ -126,10 +138,13 @@ function Sidebar() {
 
       {/* User Profile - Now shows REAL data */}
       {currentUser && (
-        <div className="flex items-center gap-3 px-5 py-4 rounded-[20px] mx-3 mt-5 
-                        bg-white/5 backdrop-blur-[10px] border border-white/10 
-                        cursor-pointer transition-all duration-300 
-                        hover:bg-white/10 hover:-translate-y-0.5">
+        <div 
+          onClick={handleProfileClick}
+          className="flex items-center gap-3 px-5 py-4 rounded-[20px] mx-3 mt-5 
+                    bg-white/5 backdrop-blur-[10px] border border-white/10 
+                    cursor-pointer transition-all duration-300 
+                    hover:bg-white/10 hover:-translate-y-0.5"
+        >
           <div className="w-11 h-11 rounded-[14px] bg-gradient-to-br from-veritas-blue to-veritas-blue-dark 
                           flex items-center justify-center text-xl 
                           shadow-[0_4px_12px_rgba(102,126,234,0.3)]">
