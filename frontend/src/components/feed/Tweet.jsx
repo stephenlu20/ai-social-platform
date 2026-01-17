@@ -303,7 +303,7 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, depth
                           ? 'text-red-500 hover:text-red-600 hover:bg-red-500/10' 
                           : 'text-white/50 hover:text-veritas-pink hover:bg-veritas-pink/10'}
                         disabled:opacity-50`}>
-              <span className="text-lg">{isLiked ? '❤️' : '🤍'}</span>
+              <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
               <span>{localLikeCount}</span>
             </button>
             <button className="flex items-center gap-2 cursor-pointer transition-all duration-300 
