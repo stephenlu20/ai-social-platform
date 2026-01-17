@@ -5,6 +5,7 @@ import ReplyModal from './ReplyModal';
 import factCheckService from '../../services/factcheckService';
 import { FactCheckBadge, FactCheckButton, FactCheckModal } from '../factcheck';
 import { getStyleClasses } from './PostStyler'; // #75
+import { TrustScoreBadge } from '../trustscore';
 
 function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPostDeleted, canDelete = false, depth = 0 }) {
   const [isLiked, setIsLiked] = useState(post.isLikedByCurrentUser || false);
@@ -274,6 +275,15 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
           <div className="flex items-center gap-2 mb-2 flex-wrap">
             <span className="font-bold text-[15px]">{author.displayName}</span>
             <span className="text-white/50 text-sm">@{author.username}</span>
+            {/* Trust Score Badge */}
+            {author.trustScore != null && (
+              <TrustScoreBadge
+                score={author.trustScore}
+                size="xs"
+                showTooltip={true}
+                userId={author.id}
+              />
+            )}
             <span className="text-white/50 text-sm">·</span>
             <span className="text-white/50 text-sm">{timeAgo}</span>
 

@@ -31,6 +31,7 @@ public class AIFactCheckService {
     private final ObjectMapper objectMapper;
     private final PostRepository postRepository;
     private final FactCheckRepository factCheckRepository;
+    private final TrustScoreService trustScoreService;
     private final Random random = new Random();
 
     @Value("${app.fact-check.demo-mode:false}")
@@ -39,11 +40,13 @@ public class AIFactCheckService {
     public AIFactCheckService(ChatClient.Builder chatClientBuilder,
                               ObjectMapper objectMapper,
                               PostRepository postRepository,
-                              FactCheckRepository factCheckRepository) {
+                              FactCheckRepository factCheckRepository,
+                              TrustScoreService trustScoreService) {
         this.chatClient = chatClientBuilder.build();
         this.objectMapper = objectMapper;
         this.postRepository = postRepository;
         this.factCheckRepository = factCheckRepository;
+        this.trustScoreService = trustScoreService;
     }
 
     /**
@@ -209,6 +212,9 @@ public class AIFactCheckService {
         }
 
         factCheckRepository.save(factCheck);
+
+        // Update author's trust score based on fact-check result
+        trustScoreService.updateOnFactCheck(post.getAuthor().getId(), status);
 
         return result;
     }

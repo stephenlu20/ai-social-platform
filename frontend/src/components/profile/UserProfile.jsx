@@ -4,6 +4,7 @@ import userService from '../../services/userService';
 import postService from '../../services/postService';
 import FollowButton from './FollowButton';
 import Tweet from '../feed/Tweet';
+import { TrustScoreBadge, TrustScoreBreakdown } from '../trustscore';
 
 function UserProfile({ username }) {
   const { currentUser } = useUser();
@@ -154,13 +155,15 @@ function UserProfile({ username }) {
         </div>
 
         {/* Trust Score Badge */}
-        <div className="inline-flex items-center gap-2 bg-gradient-to-br from-green-600/30 to-green-700/30 
-                        border-2 border-green-600/40 rounded-xl px-4 py-2">
-          <span className="text-2xl">🛡️</span>
-          <div>
-            <div className="text-xs text-green-300 font-semibold">Trust Score</div>
-            <div className="text-xl font-bold text-white">{Math.round(profileUser.trustScore)}</div>
-          </div>
+        <div className="flex items-center gap-3">
+          <span className="text-xl">🛡️</span>
+          <span className="text-white/70 font-semibold">Trust Score:</span>
+          <TrustScoreBadge
+            score={profileUser.trustScore}
+            size="lg"
+            showTooltip={true}
+            userId={profileUser.id}
+          />
         </div>
       </div>
 
@@ -185,6 +188,16 @@ function UserProfile({ username }) {
           }`}
         >
           Replies
+        </button>
+        <button
+          onClick={() => setActiveTab('trust')}
+          className={`flex-1 py-4 text-center font-bold transition-all ${
+            activeTab === 'trust'
+              ? 'text-white border-b-4 border-veritas-pink'
+              : 'text-white/50 hover:text-white/80'
+          }`}
+        >
+          Trust Score
         </button>
       </div>
 
@@ -218,7 +231,7 @@ function UserProfile({ username }) {
               </div>
             ) : (
               replies.map(post => (
-                <Tweet 
+                <Tweet
                   key={post.id}
                   post={post}
                   currentUserId={currentUser?.id}
@@ -228,6 +241,12 @@ function UserProfile({ username }) {
               ))
             )}
           </>
+        )}
+
+        {activeTab === 'trust' && (
+          <div className="p-6">
+            <TrustScoreBreakdown userId={profileUser.id} />
+          </div>
         )}
       </div>
 
