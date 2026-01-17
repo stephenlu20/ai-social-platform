@@ -3,6 +3,7 @@ import postService from '../../services/postService';
 import followService from '../../services/followService';
 import factCheckService from '../../services/factcheckService';
 import { FactCheckBadge, FactCheckButton, FactCheckModal } from '../factcheck';
+import { MessageCircle, Repeat2, Heart, Bookmark, Share2, Shield } from 'lucide-react';
 
 function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, depth = 0 }) {
   const [isLiked, setIsLiked] = useState(post.isLikedByCurrentUser || false);
