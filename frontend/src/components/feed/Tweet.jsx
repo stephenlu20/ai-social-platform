@@ -14,6 +14,7 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
   const [isFollowHovering, setIsFollowHovering] = useState(false);
   const [showReplyModal, setShowReplyModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [clickY, setClickY] = useState(0);
   
   // Reply state
   const [replies, setReplies] = useState([]);
@@ -168,7 +169,10 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
   };
 
   // Fact-check handlers
-  const handleFactCheck = async () => {
+  const handleFactCheck = async (e) => {
+    console.log('Click Y:', e.clientY);
+    console.log('Window height:', window.innerHeight);
+    setClickY(e.clientY);
     // If already checked, just show the modal
     if (factCheckStatus && factCheckStatus !== 'UNCHECKED') {
       setShowFactCheckModal(true);
@@ -200,7 +204,9 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
     }
   };
 
-  const handleViewFactCheck = () => {
+  const handleViewFactCheck = (e) => {
+    console.log('Badge click Y:', e.clientY);
+    setClickY(e.clientY);
     setShowFactCheckModal(true);
   };
 
@@ -422,6 +428,7 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
         onClose={() => setShowFactCheckModal(false)}
         result={factCheckResult}
         postContent={content}
+        clickY={clickY}
       />
     </div>
   );

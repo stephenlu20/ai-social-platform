@@ -1,14 +1,21 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import FactCheckBadge from './FactCheckBadge';
 import SourcesList from './SourcesList';
 
 // #153 - FactCheckModal (detailed results)
-function FactCheckModal({ isOpen, onClose, result, postContent }) {
+function FactCheckModal({ isOpen, onClose, result, postContent, clickY }) {
   if (!isOpen) return null;
+
+  // Calculate how much to shift from center
+  const centerY = window.innerHeight / 2;
+  const offsetY = clickY ? clickY - centerY : 0;
+
+  console.log('Modal - clickY:', clickY, 'centerY:', centerY, 'offsetY:', offsetY);
 
   const hasError = result?.error;
 
-  return (
+  return ReactDOM.createPortal (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={onClose}
@@ -19,6 +26,7 @@ function FactCheckModal({ isOpen, onClose, result, postContent }) {
       {/* Modal */}
       <div
         className="relative bg-[#1a1a2e] border border-white/20 rounded-2xl w-full max-w-lg max-h-[80vh] overflow-hidden shadow-2xl"
+        style={{ transform: `translateY(${offsetY}px)` }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -119,7 +127,8 @@ function FactCheckModal({ isOpen, onClose, result, postContent }) {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
