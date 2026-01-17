@@ -6,6 +6,7 @@ public class CreatePostRequestDTO {
     private UUID userId;
     private String content;
     private Boolean factCheck = false;
+    private PostStyleDTO style;
 
     public UUID getUserId() {
         return userId;
@@ -33,5 +34,13 @@ public class CreatePostRequestDTO {
 
     public boolean shouldFactCheck() {
         return factCheck != null && factCheck;
+    }
+
+    public PostStyleDTO getStyle() {
+        return style;
+    }
+
+    public void setStyle(PostStyleDTO style) {
+        this.style = style;
     }
 }

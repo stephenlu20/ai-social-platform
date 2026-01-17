@@ -6,12 +6,16 @@ const postService = {
     return response.data;
   },
 
-  createPost: async (userId, content, factCheck = false) => {
-    const response = await api.post('posts', {
+  createPost: async (userId, content, factCheck = false, style = null) => {
+    const payload = {
       userId: userId,
       content: content,
       factCheck: factCheck
-    });
+    };
+    if (style) {
+      payload.style = style;
+    }
+    const response = await api.post('posts', payload);
     return response.data;
   },
 

@@ -2,6 +2,7 @@ package com.aisocial.platform.service;
 
 import com.aisocial.platform.dto.PostResponseDTO;
 import com.aisocial.platform.dto.PostSearchRequestDTO;
+import com.aisocial.platform.dto.PostStyleDTO;
 import com.aisocial.platform.entity.Post;
 import com.aisocial.platform.entity.User;
 import org.springframework.data.domain.Page;    
@@ -15,6 +16,8 @@ public interface PostService {
     Post createPost(UUID authorId, String content);
 
     PostResponseDTO createPostWithFactCheck(UUID authorId, String content, boolean factCheck);
+
+    PostResponseDTO createPostWithFactCheckAndStyle(UUID authorId, String content, boolean factCheck, PostStyleDTO style);
 
     Post replyToPost(UUID authorId, UUID parentPostId, String content);
 

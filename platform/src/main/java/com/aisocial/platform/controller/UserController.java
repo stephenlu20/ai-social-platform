@@ -1,14 +1,13 @@
 package com.aisocial.platform.controller;
 
+import com.aisocial.platform.dto.TrustScoreBreakdownDTO;
 import com.aisocial.platform.dto.UpdateUserRequestDTO;
 import com.aisocial.platform.dto.UserDTO;
-import com.aisocial.platform.entity.User;
-import com.aisocial.platform.repository.UserRepository;
+import com.aisocial.platform.service.TrustScoreService;
 import com.aisocial.platform.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,11 +17,11 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
+    private final TrustScoreService trustScoreService;
 
-    public UserController(UserService userService, UserRepository userRepository) {
+    public UserController(UserService userService, TrustScoreService trustScoreService) {
         this.userService = userService;
-        this.userRepository = userRepository;
+        this.trustScoreService = trustScoreService;
     }
 
     @GetMapping
@@ -57,9 +56,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}/trust-breakdown")
-    public ResponseEntity<TrustBreakdownDTO> getTrustBreakdown(@PathVariable UUID id) {
-        return userRepository.findById(id)
-                .map(user -> ResponseEntity.ok(new TrustBreakdownDTO(user)))
+    public ResponseEntity<TrustScoreBreakdownDTO> getTrustBreakdown(@PathVariable UUID id) {
+        return trustScoreService.getBreakdown(id)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -70,40 +69,5 @@ public class UserController {
     ) {
         UserDTO updatedUser = userService.updateUser(id, request);
         return ResponseEntity.ok(updatedUser);
-    }
-
-    public static class TrustBreakdownDTO {
-        private UUID userId;
-        private BigDecimal totalScore;
-        private Integer postsFactChecked;
-        private Integer postsVerified;
-        private Integer postsFalse;
-        private Integer debatesWon;
-        private Integer debatesLost;
-        private Double verifiedBonus;
-        private Double falsePenalty;
-
-        public TrustBreakdownDTO(User user) {
-            this.userId = user.getId();
-            this.totalScore = user.getTrustScore();
-            this.postsFactChecked = user.getPostsFactChecked();
-            this.postsVerified = user.getPostsVerified();
-            this.postsFalse = user.getPostsFalse();
-            this.debatesWon = user.getDebatesWon();
-            this.debatesLost = user.getDebatesLost();
-            
-            this.verifiedBonus = Math.min(user.getPostsVerified() * 2.0, 30.0);
-            this.falsePenalty = user.getPostsFalse() * 5.0;
-        }
-
-        public UUID getUserId() { return userId; }
-        public BigDecimal getTotalScore() { return totalScore; }
-        public Integer getPostsFactChecked() { return postsFactChecked; }
-        public Integer getPostsVerified() { return postsVerified; }
-        public Integer getPostsFalse() { return postsFalse; }
-        public Integer getDebatesWon() { return debatesWon; }
-        public Integer getDebatesLost() { return debatesLost; }
-        public Double getVerifiedBonus() { return verifiedBonus; }
-        public Double getFalsePenalty() { return falsePenalty; }
     }
 }

@@ -4,6 +4,8 @@ import followService from '../../services/followService';
 import ReplyModal from './ReplyModal';
 import factCheckService from '../../services/factcheckService';
 import { FactCheckBadge, FactCheckButton, FactCheckModal } from '../factcheck';
+import { getStyleClasses } from './PostStyler'; // #75
+import { TrustScoreBadge } from '../trustscore';
 
 function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPostDeleted, canDelete = false, depth = 0 }) {
   const [isLiked, setIsLiked] = useState(post.isLikedByCurrentUser || false);
@@ -34,8 +36,16 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
   const [localRepostCount, setLocalRepostCount] = useState(post.repostCount || 0);
   const [isReposting, setIsReposting] = useState(false);
 
-  const author = post.author;
-  const content = post.content;
+  // Check if this is a repost - if so, display original post content
+  const isRepost = post.repostOf != null;
+  const displayPost = isRepost ? post.repostOf : post;
+  const originalAuthor = isRepost ? post.repostOf.author : null;
+  const reposter = isRepost ? post.author : null;
+
+  const author = displayPost.author || post.author;
+  const content = displayPost.content || post.content;
+  const postStyle = displayPost.style || post.style; // #75 - Get style from post
+  const styleClasses = getStyleClasses(postStyle); // #75 - Get CSS classes for style
   const createdAt = new Date(post.createdAt);
   const timeAgo = getTimeAgo(createdAt);
   const replyCount = post.replyCount || 0;
@@ -233,6 +243,7 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
     }
   };
 
+  // For reposts, check against the displayed author (original post author)
   const isOwnPost = currentUserId === author?.id;
 
   // Indent for nested replies (max depth to prevent too much nesting)
@@ -242,9 +253,21 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
 
   return (
     <div>
-      <div 
-        className="border-b border-white/[0.08] p-5 flex gap-3.5 
-                    transition-all duration-300 hover:bg-veritas-pink/5"
+      {/* Repost Attribution Header */}
+      {isRepost && reposter && (
+        <div
+          className="flex items-center gap-2 text-white/50 text-xs pt-3 pb-1"
+          style={{ paddingLeft: `${20 + leftPadding + 54}px` }}
+        >
+          <span className="text-green-400">🔁</span>
+          <span className="font-semibold text-white/70">{reposter.displayName}</span>
+          <span>reposted</span>
+        </div>
+      )}
+      <div
+        className={`border-b border-white/[0.08] p-5 flex gap-3.5
+                    transition-all duration-300 hover:bg-veritas-pink/5
+                    ${isRepost ? 'pt-2' : ''}`}
         style={{ paddingLeft: `${20 + leftPadding}px` }}
       >
         <div className="text-4xl flex-shrink-0 relative">🎨</div>
@@ -252,6 +275,15 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
           <div className="flex items-center gap-2 mb-2 flex-wrap">
             <span className="font-bold text-[15px]">{author.displayName}</span>
             <span className="text-white/50 text-sm">@{author.username}</span>
+            {/* Trust Score Badge */}
+            {author.trustScore != null && (
+              <TrustScoreBadge
+                score={author.trustScore}
+                size="xs"
+                showTooltip={true}
+                userId={author.id}
+              />
+            )}
             <span className="text-white/50 text-sm">·</span>
             <span className="text-white/50 text-sm">{timeAgo}</span>
 
@@ -308,7 +340,14 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
             )}
           </div>
           
-          <div className="text-white/90 leading-relaxed mb-3 text-[15px]">{content}</div>
+          {/* #75 - Apply post styles */}
+          <div
+            className={`leading-relaxed mb-3 ${styleClasses.sizeClass || 'text-[15px]'} ${styleClasses.fontClass} ${styleClasses.colorClass || 'text-white/90'}
+                       ${Object.keys(styleClasses.backgroundStyle).length > 0 ? 'p-3 rounded-xl' : ''}`}
+            style={styleClasses.backgroundStyle}
+          >
+            {content}
+          </div>
           
           <div className="flex gap-6 text-white/50">
             <button 

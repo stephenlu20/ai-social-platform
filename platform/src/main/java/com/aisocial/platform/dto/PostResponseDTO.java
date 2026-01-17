@@ -21,6 +21,7 @@ public class PostResponseDTO {
     private Boolean isLikedByCurrentUser;
     private Boolean isRepostedByCurrentUser;
     private FactCheckResultDTO factCheckResult;
+    private PostStyleDTO style;
 
     public PostResponseDTO() {}
 
@@ -68,4 +69,7 @@ public class PostResponseDTO {
 
     public FactCheckResultDTO getFactCheckResult() { return factCheckResult; }
     public void setFactCheckResult(FactCheckResultDTO factCheckResult) { this.factCheckResult = factCheckResult; }
+
+    public PostStyleDTO getStyle() { return style; }
+    public void setStyle(PostStyleDTO style) { this.style = style; }
 }

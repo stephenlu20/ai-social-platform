@@ -3,6 +3,7 @@ package com.aisocial.platform.service;
 import com.aisocial.platform.dto.FactCheckResultDTO;
 import com.aisocial.platform.dto.PostResponseDTO;
 import com.aisocial.platform.dto.PostSearchRequestDTO;
+import com.aisocial.platform.dto.PostStyleDTO;
 import com.aisocial.platform.dto.UserDTO;
 import com.aisocial.platform.entity.FactCheckStatus;
 import com.aisocial.platform.entity.Post;
@@ -67,14 +68,33 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostResponseDTO createPostWithFactCheck(UUID authorId, String content, boolean factCheck) {
+        return createPostWithFactCheckAndStyle(authorId, content, factCheck, null);
+    }
+
+    @Override
+    public PostResponseDTO createPostWithFactCheckAndStyle(UUID authorId, String content, boolean factCheck, PostStyleDTO style) {
         User author = userRepository.findById(authorId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Validate style if provided (#69)
+        if (style != null && !style.isValid()) {
+            throw new IllegalArgumentException("Invalid style options");
+        }
 
         // Create the post
         Post post = new Post();
         post.setAuthor(author);
         post.setContent(content);
         post.setCreatedAt(Instant.now());
+
+        // Set style if provided
+        if (style != null) {
+            try {
+                post.setStyle(objectMapper.writeValueAsString(style));
+            } catch (Exception e) {
+                log.warn("Could not serialize post style", e);
+            }
+        }
 
         FactCheckResultDTO factCheckResult = null;
 
@@ -337,6 +357,16 @@ public class PostServiceImpl implements PostService {
             dto.setIsRepostedByCurrentUser(reposted);
         } else {
             dto.setIsRepostedByCurrentUser(false);
+        }
+
+        // Parse and set style
+        if (post.getStyle() != null && !post.getStyle().isEmpty()) {
+            try {
+                PostStyleDTO style = objectMapper.readValue(post.getStyle(), PostStyleDTO.class);
+                dto.setStyle(style);
+            } catch (Exception e) {
+                log.warn("Could not parse post style", e);
+            }
         }
 
         return dto;
