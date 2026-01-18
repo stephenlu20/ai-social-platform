@@ -4,6 +4,7 @@ import { useUser } from '../../context/UserContext';
 import EditProfileModal from '../profile/EditProfileModal';
 import CreateDebateModal from '../debates/CreateDebateModal';
 import debateService from '../../services/debateService';
+import { Home, Globe, MessageCircle, Users, Star, User, UserPlus, Sparkles, Swords } from 'lucide-react';
 
 
 function Sidebar({ onNavigateToProfile, onNavigateToSearch, onNavigateToDebates }) {

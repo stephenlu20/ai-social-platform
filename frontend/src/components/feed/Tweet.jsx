@@ -6,6 +6,7 @@ import factCheckService from '../../services/factcheckService';
 import { FactCheckBadge, FactCheckButton, FactCheckModal } from '../factcheck';
 import { getStyleClasses } from './PostStyler'; // #75
 import { TrustScoreBadge } from '../trustscore';
+import { MessageCircle, Repeat2, Heart, Bookmark, Share2, Shield } from 'lucide-react';
 
 function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPostDeleted, canDelete = false, depth = 0 }) {
   const [isLiked, setIsLiked] = useState(post.isLikedByCurrentUser || false);
@@ -350,72 +351,66 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
           >
             {content}
           </div>
-          
-          <div className="flex items-center justify-between gap-2 text-white/50">
-            {/* Left side: action buttons */}
-            <div className="flex gap-6 min-w-0">
-              <button 
-                onClick={handleToggleReplies}
-                className={`flex items-center gap-2 cursor-pointer transition-all duration-300 
-                           p-1.5 rounded-[10px] relative bg-transparent border-none 
-                           text-inherit text-[13px] font-semibold
-                           ${replyCount > 0 ? 'hover:text-blue-400 hover:bg-blue-400/10' : 'opacity-50 cursor-default'}`}
-              >
-                <span className="text-lg">💬</span>
-                <span>{replyCount}</span>
-                {replyCount > 0 && (
-                  <span className={`text-xs transition-transform duration-200 ${showReplies ? 'rotate-180' : ''}`}>
-                    ▼
-                  </span>
-                )}
-              </button>
-              <button
-                onClick={handleRepost}
-                disabled={isReposting || isReposted}
-                className={`flex items-center gap-2 cursor-pointer transition-all duration-300
-                           p-1.5 rounded-[10px] relative bg-transparent border-none
-                           text-[13px] font-semibold
-                           ${isReposted
-                             ? 'text-green-500 cursor-default'
-                             : 'text-white/50 hover:text-green-400 hover:bg-green-400/10'}
-                           disabled:opacity-70`}>
-                <span className="text-lg">🔁</span>
-                <span>{localRepostCount}</span>
-              </button>
-              <button 
-                onClick={handleLike} 
-                disabled={isLiking}
-                className={`flex items-center gap-2 cursor-pointer transition-all duration-300 
-                           p-1.5 rounded-[10px] relative bg-transparent border-none 
-                           text-[13px] font-semibold
-                           ${isLiked 
-                            ? 'text-red-500 hover:text-red-600 hover:bg-red-500/10' 
-                            : 'text-white/50 hover:text-veritas-pink hover:bg-veritas-pink/10'}
-                          disabled:opacity-50`}>
-                <span className="text-lg">{isLiked ? '❤️' : '🤍'}</span>
-                <span>{localLikeCount}</span>
-              </button>
-              <button className="flex items-center gap-2 cursor-pointer transition-all duration-300 
-                                 p-1.5 rounded-[10px] relative bg-transparent border-none 
-                                 text-inherit text-[13px] font-semibold
-                                 hover:text-veritas-pink hover:bg-veritas-pink/10">
-                <span className="text-lg">🔖</span>
-              </button>
-              <button className="flex items-center gap-2 cursor-pointer transition-all duration-300
-                                 p-1.5 rounded-[10px] relative bg-transparent border-none
-                                 text-inherit text-[13px] font-semibold
-                                 hover:text-veritas-pink hover:bg-veritas-pink/10">
-                <span className="text-lg">🔗</span>
-              </button>
-              <FactCheckButton
-                onClick={handleFactCheck}
-                isLoading={isFactChecking}
-                isChecked={factCheckStatus && factCheckStatus !== 'UNCHECKED'}
-                size="sm"
-              />
-            </div>
-
-            {/* Right side: Reply button (fixed position) */}
+          <div className="flex gap-6 text-white/50">
+            <button 
+              onClick={handleToggleReplies}
+              className={`flex items-center gap-2 cursor-pointer transition-all duration-300 
+                         p-1.5 rounded-[10px] relative bg-transparent border-none 
+                         text-inherit text-[13px] font-semibold
+                         ${replyCount > 0 ? 'hover:text-blue-400 hover:bg-blue-400/10' : 'opacity-50 cursor-default'}`}
+            >
+              <MessageCircle className="w-5 h-5" />
+              <span>{replyCount}</span>
+              {replyCount > 0 && (
+                <span className={`text-xs transition-transform duration-200 ${showReplies ? 'rotate-180' : ''}`}>
+                  ▼
+                </span>
+              )}
+            </button>
+            <button
+              onClick={handleRepost}
+              disabled={isReposting || isReposted}
+              className={`flex items-center gap-2 cursor-pointer transition-all duration-300
+                         p-1.5 rounded-[10px] relative bg-transparent border-none
+                         text-[13px] font-semibold
+                         ${isReposted
+                           ? 'text-green-500 cursor-default'
+                           : 'text-white/50 hover:text-green-400 hover:bg-green-400/10'}
+                         disabled:opacity-70`}>
+              <Repeat2 className="w-5 h-5" />
+              <span>{localRepostCount}</span>
+            </button>
+            <button 
+              onClick={handleLike} 
+              disabled={isLiking}
+              className={`flex items-center gap-2 cursor-pointer transition-all duration-300 
+                         p-1.5 rounded-[10px] relative bg-transparent border-none 
+                         text-[13px] font-semibold
+                         ${isLiked 
+                          ? 'text-red-500 hover:text-red-600 hover:bg-red-500/10' 
+                          : 'text-white/50 hover:text-veritas-pink hover:bg-veritas-pink/10'}
+                        disabled:opacity-50`}>
+              <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+              <span>{localLikeCount}</span>
+            </button>
+            <button className="flex items-center gap-2 cursor-pointer transition-all duration-300 
+                               p-1.5 rounded-[10px] relative bg-transparent border-none 
+                               text-inherit text-[13px] font-semibold
+                               hover:text-veritas-pink hover:bg-veritas-pink/10">
+              <Bookmark className="w-5 h-5" />
+            </button>
+            <button className="flex items-center gap-2 cursor-pointer transition-all duration-300
+                               p-1.5 rounded-[10px] relative bg-transparent border-none
+                               text-inherit text-[13px] font-semibold
+                               hover:text-veritas-pink hover:bg-veritas-pink/10">
+              <Share2 className="w-5 h-5" />
+            </button>
+            <FactCheckButton
+              onClick={handleFactCheck}
+              isLoading={isFactChecking}
+              isChecked={factCheckStatus && factCheckStatus !== 'UNCHECKED'}
+              size="sm"
+            />
             <button
               onClick={handleOpenReplyModal}
               className="flex-shrink-0 px-3 py-1.5 rounded-full font-bold text-xs transition-all duration-300
