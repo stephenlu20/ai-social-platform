@@ -6,6 +6,7 @@ import FollowButton from './FollowButton';
 import Tweet from '../feed/Tweet';
 import { TrustScoreBadge, TrustScoreBreakdown } from '../trustscore';
 import logo from '../../assets/CondorTransparent.png';
+import { Shield } from 'lucide-react';
 
 function UserProfile({ username }) {
   const { currentUser } = useUser();
@@ -161,7 +162,7 @@ function UserProfile({ username }) {
 
         {/* Trust Score Badge */}
         <div className="flex items-center gap-3">
-          <span className="text-xl">🛡️</span>
+          <Shield className="w-5 h-5" />
           <span className="text-white/70 font-semibold">Trust Score:</span>
           <TrustScoreBadge
             score={profileUser.trustScore}

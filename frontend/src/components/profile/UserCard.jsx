@@ -1,6 +1,7 @@
 import React from 'react';
 import FollowButton from './FollowButton';
 import logo from '../../assets/CondorTransparent.png';
+import { Shield } from 'lucide-react';
 
 function UserCard({ user, currentUserId, onViewProfile, showFollowButton = true, onFollowChange }) {
   const handleViewProfile = () => {
@@ -44,7 +45,7 @@ function UserCard({ user, currentUserId, onViewProfile, showFollowButton = true,
           <div className="flex items-center gap-2 flex-shrink-0">
             <div className="bg-gradient-to-br from-[#10b981] to-[#059669] text-white 
                             px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
-              <span>🛡️</span>
+              <span><Shield className="w-3 h-3" /></span>
               <span>{Math.round(user.trustScore)}</span>
             </div>
             

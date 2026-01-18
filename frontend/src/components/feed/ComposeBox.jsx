@@ -7,6 +7,7 @@ import postAssistantService from '../../services/postAssistantService';
 import { getStyleClasses } from './PostStyler';
 import { Sparkles, Loader2 } from 'lucide-react';
 import { CheckCircle, Circle, AlertTriangle, XCircle, HelpCircle, Dot, Edit } from 'lucide-react';
+import { Send } from 'lucide-react';
 
 // Compact style options
 const QUICK_FONTS = [
@@ -129,7 +130,12 @@ function FactCheckPreview({ result, onPostAnyway, onEdit, isPosting }) {
                      hover:opacity-90 transition-all
                      disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isPosting ? 'Posting...' : '📤 Post Anyway'}
+          {isPosting ? 'Posting...' : (
+            <>
+              <Send className="w-4 h-4" />
+              Post Anyway
+            </>
+          )}
         </button>
       </div>
     </div>

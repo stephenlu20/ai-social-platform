@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import postAssistantService from '../../services/postAssistantService';
+import { Loader2 } from 'lucide-react';
 
 function PostAssistantPanel({ currentText, onSelectSuggestion, onClose }) {
   const [mode, setMode] = useState(currentText ? 'improve' : 'generate');
@@ -122,12 +123,11 @@ function PostAssistantPanel({ currentText, onSelectSuggestion, onClose }) {
       >
         {isLoading ? (
           <>
-            <span className="animate-spin">⟳</span>
+            <Loader2 className="w-4 h-4 animate-spin" />
             <span>Generating...</span>
           </>
         ) : (
           <>
-            <span>🪄</span>
             <span>{mode === 'improve' ? 'Get Suggestions' : 'Generate Posts'}</span>
           </>
         )}

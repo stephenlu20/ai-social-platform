@@ -1,23 +1,47 @@
-
 import React from 'react';
 import { useUser } from '../../context/UserContext';
 import debateService from '../../services/debateService';
-import { Check } from 'lucide-react';
+import { Check, Clock, Swords, Vote, CheckCircle, Trophy, X } from 'lucide-react';
 
 function DebateCard({ debate, onDebateUpdated }) {
   const { currentUser } = useUser();
 
   const getStatusBadge = (status) => {
     const badges = {
-      PENDING: { bg: 'bg-yellow-500/20', border: 'border-yellow-500/50', text: 'text-yellow-300', label: '⏳ Pending' },
-      ACTIVE: { bg: 'bg-red-500/20', border: 'border-red-500/50', text: 'text-red-300', label: '⚔️ Active' },
-      VOTING: { bg: 'bg-blue-500/20', border: 'border-blue-500/50', text: 'text-blue-300', label: '🗳️ Voting' },
-      COMPLETED: { bg: 'bg-green-500/20', border: 'border-green-500/50', text: 'text-green-300', label: '✅ Completed' }
+      PENDING: { 
+        icon: <Clock className="w-3 h-3" />,
+        bg: 'bg-yellow-500/20', 
+        border: 'border-yellow-500/50', 
+        text: 'text-yellow-300', 
+        label: 'Pending' 
+      },
+      ACTIVE: { 
+        icon: <Swords className="w-3 h-3" />,
+        bg: 'bg-red-500/20', 
+        border: 'border-red-500/50', 
+        text: 'text-red-300', 
+        label: 'Active' 
+      },
+      VOTING: { 
+        icon: <Vote className="w-3 h-3" />,
+        bg: 'bg-blue-500/20', 
+        border: 'border-blue-500/50', 
+        text: 'text-blue-300', 
+        label: 'Voting' 
+      },
+      COMPLETED: { 
+        icon: <CheckCircle className="w-3 h-3" />,
+        bg: 'bg-green-500/20', 
+        border: 'border-green-500/50', 
+        text: 'text-green-300', 
+        label: 'Completed' 
+      }
     };
     const badge = badges[status] || badges.PENDING;
     
     return (
-      <span className={`px-3 py-1 rounded-lg text-xs font-bold ${badge.bg} border ${badge.border} ${badge.text}`}>
+      <span className={`px-3 py-1 rounded-lg text-xs font-bold ${badge.bg} border ${badge.border} ${badge.text} flex items-center gap-1.5 w-fit`}>
+        {badge.icon}
         {badge.label}
       </span>
     );
@@ -62,7 +86,7 @@ function DebateCard({ debate, onDebateUpdated }) {
     <div className="border-b border-white/10 p-5 transition-all duration-300 hover:bg-white/5">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">⚔️</span>
+          <Swords className="w-6 h-6" />
           <span className="font-bold text-lg">Debate Challenge</span>
         </div>
         {getStatusBadge(debate.status)}
@@ -147,7 +171,7 @@ function DebateCard({ debate, onDebateUpdated }) {
       {debate.status === 'COMPLETED' && debate.winnerId && (
         <div className="mb-4 p-3 bg-[#c9a35e]/20 border border-[#c9a35e]/50 rounded-xl">
           <div className="text-center">
-            <div className="text-2xl mb-1">🏆</div>
+            <Trophy className="w-8 h-8 mx-auto mb-2 text-[#c9a35e]" />
             <div className="font-bold text-[#c9a35e]">
               Winner: {debate.winnerId === debate.challenger?.id 
                 ? debate.challenger?.displayName 
@@ -163,17 +187,19 @@ function DebateCard({ debate, onDebateUpdated }) {
             onClick={handleAccept}
             className="flex-1 px-4 py-2 bg-green-500/20 hover:bg-green-500/30 
                        border border-green-500/50 text-green-300 rounded-xl font-bold
-                       transition-all duration-300"
+                       transition-all duration-300 flex items-center justify-center gap-2"
           >
-            <Check/> Accept Challenge
+            <Check className="w-4 h-4" />
+            Accept Challenge
           </button>
           <button
             onClick={handleDecline}
             className="flex-1 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 
                        border border-red-500/50 text-red-300 rounded-xl font-bold
-                       transition-all duration-300"
+                       transition-all duration-300 flex items-center justify-center gap-2"
           >
-            ✗ Decline
+            <X className="w-4 h-4" />
+            Decline
           </button>
         </div>
       )}

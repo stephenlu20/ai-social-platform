@@ -3,6 +3,7 @@ import { useUser } from '../../context/UserContext';
 import followService from '../../services/followService';
 import FollowButton from './FollowButton';
 import logo from '../../assets/CondorTransparent.png';
+import { X, Shield } from 'lucide-react';
 
 function FollowListModal({ userId, type, onClose }) {
   const { currentUser } = useUser();
@@ -63,7 +64,7 @@ function FollowListModal({ userId, type, onClose }) {
             onClick={onClose}
             className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 transition-all flex items-center justify-center text-2xl"
           >
-            ✕
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -131,7 +132,7 @@ function UserListItem({ user, currentUserId, onFollowChange }) {
       {/* Trust Score */}
       <div className="flex items-center gap-1 bg-gradient-to-br from-green-600/30 to-green-700/30 
                       border border-green-600/40 rounded-lg px-2 py-1 flex-shrink-0">
-        <span className="text-xs">🛡️</span>
+        <span className="text-xs"><Shield className="w-3 h-3" /></span>
         <span className="text-xs font-bold">{Math.round(user.trustScore)}</span>
       </div>
 

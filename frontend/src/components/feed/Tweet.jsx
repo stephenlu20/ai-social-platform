@@ -259,8 +259,7 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
           className="flex items-center gap-2 text-white/50 text-xs pt-3 pb-1"
           style={{ paddingLeft: `${20 + leftPadding + 54}px` }}
         >
-          <span className="text-green-400">🔁</span>
-          <span className="font-semibold text-white/70">{reposter.displayName}</span>
+          <Repeat2 className="w-4 h-4 text-green-400" />
           <span>reposted</span>
         </div>
       )}

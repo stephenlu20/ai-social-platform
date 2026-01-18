@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Check } from 'lucide-react';
+import { Search, Check, Loader2 } from 'lucide-react';
 
 // #151 - FactCheckButton on PostCard
 // #156 - Add fact-check button loading state
@@ -28,7 +28,7 @@ function FactCheckButton({ onClick, isLoading, isChecked, size = 'sm' }) {
     >
       {isLoading ? (
         <>
-          <span className="animate-spin">⟳</span>
+          <Loader2 className="w-4 h-4 animate-spin" />
           <span>Checking...</span>
         </>
       ) : (

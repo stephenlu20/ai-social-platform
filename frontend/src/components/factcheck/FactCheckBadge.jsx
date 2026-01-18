@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Circle, AlertTriangle, XCircle, HelpCircle } from 'lucide-react';
+import { CheckCircle, CircleDot, AlertTriangle, XCircle, HelpCircle } from 'lucide-react';
 
 // #152 - FactCheckBadge (status indicator)
 function FactCheckBadge({ status, score, size = 'sm', onClick }) {
@@ -16,7 +16,7 @@ function FactCheckBadge({ status, score, size = 'sm', onClick }) {
         };
       case 'LIKELY_TRUE':
         return {
-          icon: <Circle />,
+          icon: <CircleDot />,
           label: 'Likely True',
           colors: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50',
           dotColor: 'bg-emerald-400'

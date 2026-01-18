@@ -3,6 +3,7 @@ import { useUser } from '../../context/UserContext';
 import api from '../../services/api';
 import FollowButton from './FollowButton';
 import logo from '../../assets/CondorTransparent.png';
+import { Shield } from 'lucide-react';
 
 function UserSearch() {
   const { currentUser } = useUser();
@@ -196,7 +197,7 @@ function UserSearchResult({ user, currentUserId, onFollowChange }) {
       <div className="flex flex-col items-end gap-2 flex-shrink-0">
         <div className="flex items-center gap-2 bg-gradient-to-br from-green-600/30 to-green-700/30
                         border border-green-600/40 rounded-lg px-3 py-1.5">
-          <span className="text-sm">🛡️</span>
+          <span className="text-sm"><Shield className="w-3 h-3" /></span>
           <span className="text-sm font-bold">{Math.round(user.trustScore)}</span>
         </div>
         <div className="text-xs text-white/50">

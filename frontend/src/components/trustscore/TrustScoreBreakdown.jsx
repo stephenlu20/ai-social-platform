@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import userService from '../../services/userService';
+import { Trophy, BarChart3, CheckCircle, XCircle } from 'lucide-react';
 
 /**
  * Trust Score Breakdown - detailed breakdown panel
@@ -71,7 +72,7 @@ function TrustScoreBreakdown({ userId, initialData = null }) {
     <div className="p-6 bg-white/5 border border-white/10 rounded-2xl">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <span className="text-2xl">🏆</span>
+        <span className="text-2xl"><Trophy className="w-6 h-6" /></span>
         <h3 className="text-lg font-bold text-white">Trust Score Breakdown</h3>
       </div>
 
@@ -107,7 +108,7 @@ function TrustScoreBreakdown({ userId, initialData = null }) {
         {/* Base Score */}
         <div className="flex justify-between items-center p-3 bg-white/5 rounded-xl">
           <div className="flex items-center gap-2">
-            <span className="text-lg">📊</span>
+            <span className="text-lg"><BarChart3 className="w-5 h-5" /></span>
             <span className="text-white/80">Base Score</span>
           </div>
           <span className="text-white font-semibold">+{breakdown.baseScore?.toFixed(0) || 50}</span>
@@ -119,7 +120,7 @@ function TrustScoreBreakdown({ userId, initialData = null }) {
             <span className="text-lg">✓</span>
             <div>
               <span className="text-white/80">Verified Posts</span>
-              <span className="text-white/50 text-xs ml-2">({breakdown.postsVerified} × 2, max +30)</span>
+              <span className="text-white/50 text-xs ml-2">({breakdown.postsVerified} <CheckCircle className="w-5 h-5" /> 2, max +30)</span>
             </div>
           </div>
           <span className="text-green-400 font-semibold">+{breakdown.verifiedBonus?.toFixed(1)}</span>
@@ -131,7 +132,7 @@ function TrustScoreBreakdown({ userId, initialData = null }) {
             <span className="text-lg">✗</span>
             <div>
               <span className="text-white/80">False Posts</span>
-              <span className="text-white/50 text-xs ml-2">({breakdown.postsFalse} × 5)</span>
+              <span className="text-white/50 text-xs ml-2">({breakdown.postsFalse} <XCircle className="w-5 h-5" /> 5)</span>
             </div>
           </div>
           <span className="text-red-400 font-semibold">-{breakdown.falsePenalty?.toFixed(1)}</span>

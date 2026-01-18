@@ -267,7 +267,7 @@ function MainFeed() {
                        : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
           onClick={() => setActiveTab('debates')}
         >
-          ⚔️ Debates
+          Debates
         </div>
       </div>
 

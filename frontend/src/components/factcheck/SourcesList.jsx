@@ -1,4 +1,5 @@
 import React from 'react';
+import { FileText } from 'lucide-react';
 
 // #155 - SourcesList component
 function SourcesList({ sources }) {
@@ -14,7 +15,7 @@ function SourcesList({ sources }) {
             className="p-2 bg-white/5 rounded-lg border border-white/10 text-sm"
           >
             <div className="flex items-start gap-2">
-              <span className="text-blue-400">📄</span>
+              <span className="text-blue-400"><FileText className="w-4 h-4 text-blue-400" /></span>
               <div className="flex-1 min-w-0">
                 {source.url ? (
                   <a

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import TrustScoreTooltip from './TrustScoreTooltip';
+import { CheckCircle, Circle, CircleDot, AlertTriangle, XCircle } from 'lucide-react';
 
 /**
  * Trust Score Badge - displays user's trust score with color coding and optional tooltip
@@ -11,13 +12,12 @@ function TrustScoreBadge({ score, size = 'md', showTooltip = true, userId = null
 
   // Determine tier and colors based on score
   const getTierInfo = (s) => {
-    if (s >= 90) return { tier: 'TRUSTED', color: 'text-emerald-400', bg: 'bg-emerald-500/20', border: 'border-emerald-500/50', icon: '✓' };
-    if (s >= 75) return { tier: 'RELIABLE', color: 'text-green-400', bg: 'bg-green-500/20', border: 'border-green-500/50', icon: '◐' };
-    if (s >= 50) return { tier: 'NEUTRAL', color: 'text-blue-400', bg: 'bg-blue-500/20', border: 'border-blue-500/50', icon: '○' };
-    if (s >= 25) return { tier: 'QUESTIONABLE', color: 'text-yellow-400', bg: 'bg-yellow-500/20', border: 'border-yellow-500/50', icon: '⚠' };
-    return { tier: 'UNRELIABLE', color: 'text-red-400', bg: 'bg-red-500/20', border: 'border-red-500/50', icon: '✗' };
+    if (s >= 90) return { tier: 'TRUSTED', color: 'text-emerald-400', bg: 'bg-emerald-500/20', border: 'border-emerald-500/50', icon: <CheckCircle className="w-3 h-3" /> };
+    if (s >= 75) return { tier: 'RELIABLE', color: 'text-green-400', bg: 'bg-green-500/20', border: 'border-green-500/50', icon: <CircleDot className="w-3 h-3" /> };
+    if (s >= 50) return { tier: 'NEUTRAL', color: 'text-blue-400', bg: 'bg-blue-500/20', border: 'border-blue-500/50', icon: <Circle className="w-3 h-3" /> };
+    if (s >= 25) return { tier: 'QUESTIONABLE', color: 'text-yellow-400', bg: 'bg-yellow-500/20', border: 'border-yellow-500/50', icon: <AlertTriangle className="w-3 h-3" /> };
+    return { tier: 'UNRELIABLE', color: 'text-red-400', bg: 'bg-red-500/20', border: 'border-red-500/50', icon: <XCircle className="w-3 h-3" /> };
   };
-
   const tierInfo = getTierInfo(numScore);
 
   // Size classes
