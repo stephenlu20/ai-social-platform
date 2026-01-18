@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import MainFeed from '../feed/MainFeed';
@@ -17,13 +16,16 @@ function Layout() {
   };
 
   return (
-    <div className="max-w-[1400px] mx-auto grid grid-cols-[280px_1fr_380px] gap-5 px-5
-                    lg:grid-cols-[280px_1fr_380px]
-                    md:grid-cols-[80px_1fr_300px]
-                    sm:grid-cols-1">
-      <Sidebar onNavigateToDebates={handleNavigateToDebates} />
-      <MainFeed refreshTrigger={refreshTrigger} debateFilterRequest={debateFilterRequest} />
-      <RightSidebar onPostCreated={handlePostCreated} />
+    <div className="min-h-screen flex justify-center px-5">
+      <div className="w-full max-w-[1400px] grid gap-5 py-5
+                      grid-cols-1
+                      sm:grid-cols-1
+                      md:grid-cols-[80px_1fr_300px]
+                      lg:grid-cols-[280px_1fr_380px]">
+        <Sidebar onNavigateToDebates={handleNavigateToDebates} />
+        <MainFeed refreshTrigger={refreshTrigger} debateFilterRequest={debateFilterRequest} />
+        <RightSidebar onPostCreated={handlePostCreated} />
+      </div>
     </div>
   );
 }
