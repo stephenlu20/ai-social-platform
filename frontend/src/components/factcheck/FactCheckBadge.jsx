@@ -1,4 +1,5 @@
 import React from 'react';
+import { CheckCircle, Circle, AlertTriangle, XCircle, HelpCircle } from 'lucide-react';
 
 // #152 - FactCheckBadge (status indicator)
 function FactCheckBadge({ status, score, size = 'sm', onClick }) {
@@ -8,35 +9,35 @@ function FactCheckBadge({ status, score, size = 'sm', onClick }) {
     switch (status?.toUpperCase()) {
       case 'VERIFIED':
         return {
-          icon: '✓',
+          icon: <CheckCircle />,
           label: 'Verified',
           colors: 'bg-green-500/20 text-green-400 border-green-500/50',
           dotColor: 'bg-green-400'
         };
       case 'LIKELY_TRUE':
         return {
-          icon: '◐',
+          icon: <Circle />,
           label: 'Likely True',
           colors: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50',
           dotColor: 'bg-emerald-400'
         };
       case 'DISPUTED':
         return {
-          icon: '⚠',
+          icon: <AlertTriangle />,
           label: 'Disputed',
           colors: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50',
           dotColor: 'bg-yellow-400'
         };
       case 'FALSE':
         return {
-          icon: '✗',
+          icon: <XCircle />,
           label: 'False',
           colors: 'bg-red-500/20 text-red-400 border-red-500/50',
           dotColor: 'bg-red-400'
         };
       case 'UNVERIFIABLE':
         return {
-          icon: '?',
+          icon: <HelpCircle />,
           label: 'Unverifiable',
           colors: 'bg-gray-500/20 text-gray-400 border-gray-500/50',
           dotColor: 'bg-gray-400'

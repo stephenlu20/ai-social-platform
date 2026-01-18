@@ -5,6 +5,7 @@ import postService from '../../services/postService';
 import FollowButton from './FollowButton';
 import Tweet from '../feed/Tweet';
 import { TrustScoreBadge, TrustScoreBreakdown } from '../trustscore';
+import logo from '../../assets/CondorTransparent.png';
 
 function UserProfile({ username }) {
   const { currentUser } = useUser();
@@ -108,7 +109,11 @@ function UserProfile({ username }) {
           <div className="w-32 h-32 rounded-[20px] bg-gradient-to-br from-veritas-blue to-veritas-blue-dark 
                           flex items-center justify-center text-5xl 
                           shadow-[0_8px_24px_rgba(102,126,234,0.4)] border-4 border-[#0f0519]">
-            🎨
+            <img 
+              src={logo} 
+              alt="Candor Logo" 
+              className="w-10 h-10 object-contain"
+            />
           </div>
           
           {currentUser && (

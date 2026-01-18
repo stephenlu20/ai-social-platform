@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useUser } from '../../context/UserContext';
 import api from '../../services/api';
 import FollowButton from './FollowButton';
+import logo from '../../assets/CondorTransparent.png';
 
 function UserSearch() {
   const { currentUser } = useUser();
@@ -176,7 +177,11 @@ function UserSearchResult({ user, currentUserId, onFollowChange }) {
       <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-veritas-blue to-veritas-blue-dark
                       flex items-center justify-center text-2xl flex-shrink-0
                       shadow-[0_4px_12px_rgba(102,126,234,0.3)]">
-        🎨
+        <img 
+          src={logo} 
+          alt="Candor Logo" 
+          className="w-10 h-10 object-contain"
+        />
       </div>
 
       {/* User Info */}

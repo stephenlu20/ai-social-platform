@@ -5,6 +5,7 @@ import postService from '../../services/postService';
 import factCheckService from '../../services/factcheckService';
 import postAssistantService from '../../services/postAssistantService';
 import { getStyleClasses } from './PostStyler';
+import { Sparkles, Loader2 } from 'lucide-react';
 
 // Compact style options
 const QUICK_FONTS = [
@@ -254,7 +255,6 @@ function ComposeBox({ onPostCreated }) {
       {/* AI Assistant - Always Visible */}
       <div className="mb-3">
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-sm">🤖</span>
           <span className="text-xs font-semibold text-white/70">AI Assistant</span>
         </div>
         <div className="flex gap-2">
@@ -281,7 +281,11 @@ function ComposeBox({ onPostCreated }) {
                        disabled:opacity-40 disabled:cursor-not-allowed
                        flex items-center gap-1.5"
           >
-            {isGenerating ? <span className="animate-spin">⟳</span> : <span>✨</span>}
+            {isGenerating ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              <Sparkles size={16} />
+            )}
             <span>{isGenerating ? '...' : postText ? 'Improve' : 'Generate'}</span>
           </button>
         </div>
@@ -309,7 +313,6 @@ function ComposeBox({ onPostCreated }) {
       {/* Style Picker - 4 rows */}
       <div className="mb-3 p-3 bg-white/5 rounded-xl border border-white/10 space-y-2">
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-sm">🎨</span>
           <span className="text-xs font-semibold text-white/70">Style</span>
         </div>
 

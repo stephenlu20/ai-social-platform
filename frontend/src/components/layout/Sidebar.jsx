@@ -4,7 +4,8 @@ import { useUser } from '../../context/UserContext';
 import EditProfileModal from '../profile/EditProfileModal';
 import CreateDebateModal from '../debates/CreateDebateModal';
 import debateService from '../../services/debateService';
-import { Home, Globe, MessageCircle, Users, Star, User, UserPlus, Sparkles, Swords } from 'lucide-react';
+import { Edit } from 'lucide-react';
+import logo from '../../assets/CondorTransparent.png';
 
 
 function Sidebar({ onNavigateToProfile, onNavigateToSearch, onNavigateToDebates }) {
@@ -46,14 +47,17 @@ function Sidebar({ onNavigateToProfile, onNavigateToSearch, onNavigateToDebates 
   return (
     <div className="py-[30px] h-screen sticky top-0 flex flex-col">
       {/* Logo */}
-      <div className="flex items-center gap-3 mx-5 mb-6">
-        <div className="w-12 h-12 bg-gradient-to-br from-veritas-pink to-veritas-coral 
-                        rounded-2xl flex items-center justify-center text-[28px]">
-          🎭
+      <div className="flex items-center mx-5 mb-6">
+        <div>
+          <img 
+            src={logo} 
+            alt="Candor Logo" 
+            className="w-10 h-10 object-contain"
+          />
         </div>
         <div className="text-[26px] font-extrabold bg-gradient-to-br from-veritas-pink to-veritas-coral 
                         bg-clip-text text-transparent">
-          Chirp
+          Candor
         </div>
       </div>
 
@@ -88,9 +92,13 @@ function Sidebar({ onNavigateToProfile, onNavigateToSearch, onNavigateToDebates 
                    hover:border-veritas-pink/50 transition-all"
       >
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-veritas-blue to-veritas-blue-dark 
+          <div className="w-12 h-12 rounded-xl bg-veritas-blue-dark 
                           flex items-center justify-center text-xl">
-            🎨
+            <img 
+              src={logo} 
+              alt="Candor Logo" 
+              className="w-10 h-10 object-contain"
+            />
           </div>
 
           <div className="flex-1">
@@ -105,7 +113,7 @@ function Sidebar({ onNavigateToProfile, onNavigateToSearch, onNavigateToDebates 
             }}
             className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/10"
           >
-            ✏️
+            <Edit />
           </button>
         </div>
 
@@ -124,7 +132,7 @@ function Sidebar({ onNavigateToProfile, onNavigateToSearch, onNavigateToDebates 
                      bg-gradient-to-br from-red-500/20 to-orange-500/20
                      border border-red-500/30 hover:bg-red-500/30 transition"
         >
-          ⚔️ Create Debate
+        Create Debate
         </button>
 
         <button
@@ -134,7 +142,7 @@ function Sidebar({ onNavigateToProfile, onNavigateToSearch, onNavigateToDebates 
                      bg-gradient-to-br from-purple-500/20 to-pink-500/20
                      border border-purple-500/30 hover:bg-purple-500/30"
         >
-          <span>📬 Challenges</span>
+          <span>Challenges</span>
           {pendingChallenges.length > 0 && (
             <span className="bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
               {pendingChallenges.length}

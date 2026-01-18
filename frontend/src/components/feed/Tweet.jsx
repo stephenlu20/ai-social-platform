@@ -6,7 +6,8 @@ import factCheckService from '../../services/factcheckService';
 import { FactCheckBadge, FactCheckButton, FactCheckModal } from '../factcheck';
 import { getStyleClasses } from './PostStyler'; // #75
 import { TrustScoreBadge } from '../trustscore';
-import { MessageCircle, Repeat2, Heart, Bookmark, Share2, Shield } from 'lucide-react';
+import { MessageCircle, Repeat2, Heart } from 'lucide-react';
+import logo from '../../assets/CondorTransparent.png';
 
 function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPostDeleted, canDelete = false, depth = 0 }) {
   const [isLiked, setIsLiked] = useState(post.isLikedByCurrentUser || false);
@@ -269,7 +270,14 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
                     ${isRepost ? 'pt-2' : ''}`}
         style={{ paddingLeft: `${20 + leftPadding}px` }}
       >
-        <div className="text-4xl flex-shrink-0 relative">🎨</div>
+        <div className="w-12 h-12 rounded-xl bg-veritas-blue-dark 
+                        flex items-center justify-center text-xl">
+          <img 
+            src={logo} 
+            alt="Candor Logo" 
+            className="w-10 h-10 object-contain"
+          />
+        </div>
         <div className="flex-1 min-w-0">
           {/* Header row with metadata and Follow button */}
           <div className="flex items-start justify-between gap-4 mb-2">

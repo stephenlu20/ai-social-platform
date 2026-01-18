@@ -1,5 +1,6 @@
 import React from 'react';
 import FollowButton from './FollowButton';
+import logo from '../../assets/CondorTransparent.png';
 
 function UserCard({ user, currentUserId, onViewProfile, showFollowButton = true, onFollowChange }) {
   const handleViewProfile = () => {
@@ -17,7 +18,11 @@ function UserCard({ user, currentUserId, onViewProfile, showFollowButton = true,
                    flex-shrink-0 cursor-pointer"
         onClick={handleViewProfile}
       >
-        🎨
+        <img 
+          src={logo} 
+          alt="Candor Logo" 
+          className="w-10 h-10 object-contain"
+        />
       </div>
 
       {/* User Info */}

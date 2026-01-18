@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../../context/UserContext';
 import followService from '../../services/followService';
 import FollowButton from './FollowButton';
+import logo from '../../assets/CondorTransparent.png';
 
 function FollowListModal({ userId, type, onClose }) {
   const { currentUser } = useUser();
@@ -111,7 +112,11 @@ function UserListItem({ user, currentUserId, onFollowChange }) {
       <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-veritas-blue to-veritas-blue-dark 
                       flex items-center justify-center text-xl flex-shrink-0
                       shadow-[0_4px_12px_rgba(102,126,234,0.3)]">
-        🎨
+        <img 
+          src={logo} 
+          alt="Candor Logo" 
+          className="w-10 h-10 object-contain"
+        />
       </div>
 
       {/* User Info */}

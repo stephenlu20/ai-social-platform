@@ -45,7 +45,7 @@ function PostAssistantPanel({ currentText, onSelectSuggestion, onClose }) {
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-lg">🤖</span>
+          <span className="text-lg"></span>
           <span className="font-bold text-white text-sm">Post Assistant</span>
         </div>
         <button
@@ -68,7 +68,7 @@ function PostAssistantPanel({ currentText, onSelectSuggestion, onClose }) {
                        : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'}
                      ${!currentText ? 'opacity-40 cursor-not-allowed' : ''}`}
         >
-          ✨ Improve Current
+          Improve Current
         </button>
         <button
           onClick={() => setMode('generate')}
@@ -77,7 +77,7 @@ function PostAssistantPanel({ currentText, onSelectSuggestion, onClose }) {
                        ? 'bg-veritas-purple/50 text-white border border-veritas-purple'
                        : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'}`}
         >
-          ✍️ Generate New
+          Generate New
         </button>
       </div>
 
