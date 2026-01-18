@@ -21,6 +21,7 @@ public class DebateDTO {
     private Integer votesDefender;
     private Integer votesTie;
     private Integer totalVotes;
+    private Integer likeCount;
     private Instant votingEndsAt;
     private Instant createdAt;
 
@@ -40,6 +41,7 @@ public class DebateDTO {
         this.votesDefender = debate.getVotesDefender();
         this.votesTie = debate.getVotesTie();
         this.totalVotes = debate.getTotalVotes();
+        this.likeCount = debate.getLikeCount();
         this.votingEndsAt = debate.getVotingEndsAt();
         this.createdAt = debate.getCreatedAt();
     }
@@ -200,5 +202,13 @@ public class DebateDTO {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Integer getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
     }
 }

@@ -48,6 +48,9 @@ public class Debate {
     @Column(name = "votes_tie")
     private Integer votesTie = 0;
 
+    @Column(name = "like_count")
+    private Integer likeCount = 0;
+
     @Column(name = "voting_ends_at")
     private Instant votingEndsAt;
 
@@ -84,6 +87,9 @@ public class Debate {
         if (votesTie == null) {
             votesTie = 0;
         }
+        if (likeCount == null) {
+            likeCount = 0;
+        }
     }
 
     public void incrementVotesChallenger() {
@@ -108,6 +114,14 @@ public class Debate {
 
     public void decrementVotesTie() {
         if (this.votesTie > 0) this.votesTie--;
+    }
+
+    public void incrementLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decrementLikeCount() {
+        if (this.likeCount > 0) this.likeCount--;
     }
 
     public void advanceRound() {
@@ -220,5 +234,13 @@ public class Debate {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Integer getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
     }
 }

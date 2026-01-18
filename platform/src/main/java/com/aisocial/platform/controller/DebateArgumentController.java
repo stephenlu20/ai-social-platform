@@ -1,5 +1,6 @@
 package com.aisocial.platform.controller;
 
+import com.aisocial.platform.dto.DebateArgumentDTO;
 import com.aisocial.platform.dto.DebateArgumentUpdateDTO;
 import com.aisocial.platform.entity.DebateArgument;
 import com.aisocial.platform.service.DebateArgumentService;
@@ -55,5 +56,14 @@ public class DebateArgumentController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/debate/{debateId}")
+    public ResponseEntity<List<DebateArgumentDTO>> getArgumentsByDebateId(@PathVariable UUID debateId) {
+        List<DebateArgumentDTO> arguments = debateArgumentService.findByDebateId(debateId)
+                .stream()
+                .map(DebateArgumentDTO::fromEntity)
+                .toList();
+        return ResponseEntity.ok(arguments);
     }
 }

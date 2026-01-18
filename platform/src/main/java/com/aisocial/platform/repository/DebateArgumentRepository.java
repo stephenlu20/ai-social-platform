@@ -27,4 +27,7 @@ public interface DebateArgumentRepository extends JpaRepository<DebateArgument, 
 
     //Count arguments in a specific round
     int countByDebateAndRoundNumber(Debate debate, Integer roundNumber);
+
+    // Find all arguments for a debate by debate ID
+    List<DebateArgument> findByDebateIdOrderByRoundNumberAscCreatedAtAsc(UUID debateId);
 }

@@ -6,6 +6,7 @@ import factCheckService from '../../services/factcheckService';
 import { FactCheckBadge, FactCheckButton, FactCheckModal } from '../factcheck';
 import { getStyleClasses } from './PostStyler'; // #75
 import { TrustScoreBadge } from '../trustscore';
+import CreateDebateModal from '../debates/CreateDebateModal';
 
 function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPostDeleted, canDelete = false, depth = 0 }) {
   const [isLiked, setIsLiked] = useState(post.isLikedByCurrentUser || false);
@@ -35,6 +36,9 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
   const [isReposted, setIsReposted] = useState(post.isRepostedByCurrentUser || false);
   const [localRepostCount, setLocalRepostCount] = useState(post.repostCount || 0);
   const [isReposting, setIsReposting] = useState(false);
+
+  // Challenge modal state
+  const [showChallengeModal, setShowChallengeModal] = useState(false);
 
   // Check if this is a repost - if so, display original post content
   const isRepost = post.repostOf != null;
@@ -273,7 +277,7 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
         <div className="text-4xl flex-shrink-0 relative">🎨</div>
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <span className="font-bold text-[15px]">{author.displayName}</span>
+            <span className="font-bold text-[15px] text-veritas-coral">{author.displayName}</span>
             <span className="text-white/50 text-sm">@{author.username}</span>
             {/* Trust Score Badge */}
             {author.trustScore != null && (
@@ -403,6 +407,19 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
                                hover:text-veritas-pink hover:bg-veritas-pink/10">
               <span className="text-lg">🔗</span>
             </button>
+            {/* Challenge to Debate - only show on other users' posts */}
+            {!isOwnPost && currentUserId && (
+              <button
+                onClick={() => setShowChallengeModal(true)}
+                className="flex items-center gap-2 cursor-pointer transition-all duration-300
+                           p-1.5 rounded-[10px] relative bg-transparent border-none
+                           text-inherit text-[13px] font-semibold
+                           hover:text-orange-400 hover:bg-orange-400/10"
+                title="Challenge to debate"
+              >
+                <span className="text-lg">⚔️</span>
+              </button>
+            )}
             <FactCheckButton
               onClick={handleFactCheck}
               isLoading={isFactChecking}
@@ -469,6 +486,16 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
         postContent={content}
         clickY={clickY}
       />
+
+      {/* Challenge to Debate Modal */}
+      {showChallengeModal && (
+        <CreateDebateModal
+          isOpen={showChallengeModal}
+          onClose={() => setShowChallengeModal(false)}
+          prefilledDefender={author}
+          prefilledTopic={content.length > 200 ? content.substring(0, 200) + '...' : content}
+        />
+      )}
     </div>
   );
 }

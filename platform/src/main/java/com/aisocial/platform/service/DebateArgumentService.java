@@ -61,4 +61,9 @@ public class DebateArgumentService {
         }
         return false;
     }
+
+    // Find all arguments for a debate by debate ID
+    public List<DebateArgument> findByDebateId(UUID debateId) {
+        return debateArgumentRepository.findByDebateIdOrderByRoundNumberAscCreatedAtAsc(debateId);
+    }
 }

@@ -4,12 +4,15 @@ import { createPortal } from 'react-dom';
 import { useUser } from '../../context/UserContext';
 import debateService from '../../services/debateService';
 
-function CreateDebateModal({ isOpen, onClose, onDebateCreated }) {
+function CreateDebateModal({ isOpen, onClose, onDebateCreated, prefilledDefender, prefilledTopic }) {
   const { currentUser, allUsers } = useUser();
-  const [topic, setTopic] = useState('');
-  const [defenderId, setDefenderId] = useState('');
+  const [topic, setTopic] = useState(prefilledTopic || '');
+  const [defenderId, setDefenderId] = useState(prefilledDefender?.id || '');
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState('');
+
+  // Defender is locked if prefilled from a post
+  const isDefenderLocked = !!prefilledDefender;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,9 +59,13 @@ function CreateDebateModal({ isOpen, onClose, onDebateCreated }) {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold flex items-center gap-3">
             <span className="text-3xl">⚔️</span>
-            <span>Create Debate Challenge</span>
+            <span>
+              {isDefenderLocked
+                ? `Challenge @${prefilledDefender.username}`
+                : 'Create Debate Challenge'}
+            </span>
           </h2>
-          <button 
+          <button
             onClick={onClose}
             className="text-white/50 hover:text-white text-3xl leading-none"
           >
@@ -67,6 +74,19 @@ function CreateDebateModal({ isOpen, onClose, onDebateCreated }) {
         </div>
 
         <form onSubmit={handleSubmit}>
+          {/* Locked Defender Display */}
+          {isDefenderLocked && (
+            <div className="mb-6">
+              <label className="block text-sm font-bold text-white/80 mb-2">
+                Challenging
+              </label>
+              <div className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white/70">
+                <span className="font-semibold text-white">{prefilledDefender.displayName}</span>
+                <span className="text-white/50 ml-2">@{prefilledDefender.username}</span>
+              </div>
+            </div>
+          )}
+
           <div className="mb-6">
             <label className="block text-sm font-bold text-white/80 mb-2">
               Debate Topic
@@ -80,29 +100,35 @@ function CreateDebateModal({ isOpen, onClose, onDebateCreated }) {
                          min-h-[100px] resize-none"
               maxLength={280}
             />
-            <div className="text-xs text-white/50 mt-1 text-right">
-              {topic.length}/280
+            <div className="flex justify-between text-xs text-white/50 mt-1">
+              {prefilledTopic && (
+                <span>Inspired by their post - edit as needed</span>
+              )}
+              <span className="ml-auto">{topic.length}/280</span>
             </div>
           </div>
 
-          <div className="mb-6">
-            <label className="block text-sm font-bold text-white/80 mb-2">
-              Challenge User
-            </label>
-            <select
-              value={defenderId}
-              onChange={(e) => setDefenderId(e.target.value)}
-              className="w-full bg-white/10 border border-white/20 rounded-xl p-4 text-white
-                         focus:outline-none focus:border-[#c9a35e] cursor-pointer"
-            >
-              <option value="" className="bg-[#1a3a52]">Select opponent...</option>
-              {availableOpponents.map(user => (
-                <option key={user.id} value={user.id} className="bg-[#1a3a52]">
-                  {user.displayName} (@{user.username})
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* Only show opponent selector if not prefilled */}
+          {!isDefenderLocked && (
+            <div className="mb-6">
+              <label className="block text-sm font-bold text-white/80 mb-2">
+                Challenge User
+              </label>
+              <select
+                value={defenderId}
+                onChange={(e) => setDefenderId(e.target.value)}
+                className="w-full bg-white/10 border border-white/20 rounded-xl p-4 text-white
+                           focus:outline-none focus:border-[#c9a35e] cursor-pointer"
+              >
+                <option value="" className="bg-[#1a3a52]">Select opponent...</option>
+                {availableOpponents.map(user => (
+                  <option key={user.id} value={user.id} className="bg-[#1a3a52]">
+                    {user.displayName} (@{user.username})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {error && (
             <div className="mb-4 p-4 bg-red-500/20 border border-red-500/50 rounded-xl text-red-200">
@@ -126,7 +152,7 @@ function CreateDebateModal({ isOpen, onClose, onDebateCreated }) {
                          hover:shadow-lg rounded-xl font-bold transition-all duration-300
                          disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isCreating ? 'Creating...' : '⚔️ Issue Challenge'}
+              {isCreating ? 'Creating...' : '⚔️ Challenge'}
             </button>
           </div>
         </form>
