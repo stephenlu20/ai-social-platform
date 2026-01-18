@@ -19,7 +19,7 @@ function SearchResults({
   
   if (loading) {
     return (
-      <div className="p-20 text-center text-white/50">
+      <div className="p-20 text-center text-white/50" style={{ minWidth: '600px' }}>
         <div className="animate-pulse">Searching...</div>
       </div>
     );
@@ -34,7 +34,7 @@ function SearchResults({
 
   if (!hasAnyResults) {
     return (
-      <div className="p-20 text-center text-white/50">
+      <div className="p-20 text-center text-white/50" style={{ minWidth: '600px' }}>
         <div className="text-6xl mb-4">🔍</div>
         <div className="text-lg">No results found</div>
         <div className="text-sm text-white/30 mt-2">Try a different search term</div>
@@ -43,7 +43,7 @@ function SearchResults({
   }
 
   return (
-    <div>
+    <div style={{ minWidth: '600px' }}>
       {/* User Results Section */}
       {showUsers && hasUserResults && (
         <div>

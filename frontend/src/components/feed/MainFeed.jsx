@@ -18,7 +18,7 @@ function MainFeed() {
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
   const [searchActive, setSearchActive] = useState(false);
-  const [searchType, setSearchType] = useState('all'); // 'all', 'users', 'posts'
+  const [searchType, setSearchType] = useState('all');
   const [searchLoading, setSearchLoading] = useState(false);
   const [userResults, setUserResults] = useState([]);
   const [postResults, setPostResults] = useState([]);
@@ -33,7 +33,6 @@ function MainFeed() {
     }
   }, [currentUser, activeTab]);
 
-  // Search effect with debounce
   useEffect(() => {
     if (!searchQuery.trim()) {
       setSearchActive(false);
@@ -44,7 +43,7 @@ function MainFeed() {
 
     const timer = setTimeout(() => {
       performSearch();
-    }, 300); // 300ms debounce
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [searchQuery, searchType]);
@@ -60,7 +59,6 @@ function MainFeed() {
     try {
       const searchPromises = [];
 
-      // Search users
       if (searchType === 'all' || searchType === 'users') {
         searchPromises.push(
           userService.searchUsers({
@@ -73,7 +71,6 @@ function MainFeed() {
         searchPromises.push(Promise.resolve({ content: [], last: true }));
       }
 
-      // Search posts
       if (searchType === 'all' || searchType === 'posts') {
         searchPromises.push(
           postService.searchPosts({
@@ -140,7 +137,6 @@ function MainFeed() {
   };
 
   const handleUserClick = (user) => {
-    // Navigate to user profile or handle as needed
     window.location.href = `/profile/${user.username}`;
   };
 
@@ -231,14 +227,14 @@ function MainFeed() {
   if (!currentUser) {
     return (
       <div className="bg-white/[0.03] rounded-3xl overflow-hidden backdrop-blur-[10px] border border-white/10 
-                      flex items-center justify-center p-20">
+                      flex items-center justify-center p-20" style={{ minWidth: '550px' }}>
         <div className="text-white/50">Loading user...</div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white/[0.03] rounded-3xl overflow-hidden backdrop-blur-[10px] border border-white/10">
+    <div className="bg-white/[0.03] rounded-3xl overflow-hidden backdrop-blur-[10px] border border-white/10" style={{ minWidth: '700px' }}>
       {/* Tabs */}
       <div className="flex sticky top-0 bg-[rgba(15,5,25,0.95)] backdrop-blur-[20px] z-10 
                       p-2 border-b border-white/10">
@@ -302,7 +298,6 @@ function MainFeed() {
             )}
           </div>
 
-          {/* Search Type Filters */}
           {searchActive && (
             <div className="flex gap-2 mt-3">
               <button
@@ -339,7 +334,6 @@ function MainFeed() {
 
       {/* Content Area */}
       {searchActive ? (
-        // Search Results
         <SearchResults
           searchType={searchType}
           userResults={userResults}
@@ -355,7 +349,6 @@ function MainFeed() {
           hasMorePosts={hasMorePosts}
         />
       ) : (
-        // Normal Feed
         <>
           {loading && (
             <div className="p-20 text-center text-white/50">
