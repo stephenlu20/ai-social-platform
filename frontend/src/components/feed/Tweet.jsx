@@ -298,13 +298,16 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
                   onClick={handleViewFactCheck}
                 />
               )}
+            </div>
 
-              {canDelete && isOwnPost && (
+            {/* Right side: Follow button OR Delete button - fixed width for alignment */}
+            <div className="flex-shrink-0 w-[100px]">
+              {canDelete && isOwnPost ? (
                 <button
                   onClick={handleDelete}
                   disabled={isDeleting}
                   className="
-                    ml-2 px-3 py-1.5 rounded-full text-xs font-bold
+                    w-full px-3 py-1.5 rounded-full text-xs font-bold
                     text-red-400 border border-red-500/40
                     hover:bg-red-500/20 hover:border-red-500
                     transition-all
@@ -313,34 +316,31 @@ function Tweet({ post, currentUserId, onPostUpdated, onAuthorFollowChange, onPos
                 >
                   {isDeleting ? 'Deleting…' : 'Delete'}
                 </button>
-              )}
-            </div>
-
-            {/* Right side: Follow button - fixed width for alignment */}
-            <div className="flex-shrink-0 w-[100px]">
-              {!isOwnPost && currentUserId && (
-                <button
-                  onClick={handleFollowToggle}
-                  onMouseEnter={() => setIsFollowHovering(true)}
-                  onMouseLeave={() => setIsFollowHovering(false)}
-                  disabled={isFollowLoading}
-                  className={`
-                    w-full px-4 py-1.5 rounded-full font-bold text-xs transition-all duration-300
-                    disabled:opacity-50 disabled:cursor-not-allowed
-                    ${isFollowing 
-                      ? 'bg-white/10 border border-white/20 text-white hover:bg-red-500/20 hover:border-red-500 hover:text-red-400' 
-                      : 'bg-gradient-to-br from-veritas-pink to-veritas-pink-dark text-white border border-transparent hover:shadow-[0_4px_12px_rgba(255,107,157,0.3)]'
-                    }
-                  `}
-                >
-                  {isFollowLoading 
-                    ? '...' 
-                    : isFollowing && isFollowHovering 
-                      ? 'Unfollow' 
-                      : isFollowing 
-                        ? 'Following' 
-                        : 'Follow'}
-                </button>
+              ) : (
+                !isOwnPost && currentUserId && (
+                  <button
+                    onClick={handleFollowToggle}
+                    onMouseEnter={() => setIsFollowHovering(true)}
+                    onMouseLeave={() => setIsFollowHovering(false)}
+                    disabled={isFollowLoading}
+                    className={`
+                      w-full px-4 py-1.5 rounded-full font-bold text-xs transition-all duration-300
+                      disabled:opacity-50 disabled:cursor-not-allowed
+                      ${isFollowing 
+                        ? 'bg-white/10 border border-white/20 text-white hover:bg-red-500/20 hover:border-red-500 hover:text-red-400' 
+                        : 'bg-gradient-to-br from-veritas-pink to-veritas-pink-dark text-white border border-transparent hover:shadow-[0_4px_12px_rgba(255,107,157,0.3)]'
+                      }
+                    `}
+                  >
+                    {isFollowLoading 
+                      ? '...' 
+                      : isFollowing && isFollowHovering 
+                        ? 'Unfollow' 
+                        : isFollowing 
+                          ? 'Following' 
+                          : 'Follow'}
+                  </button>
+                )
               )}
             </div>
           </div>
