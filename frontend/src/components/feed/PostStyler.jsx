@@ -79,7 +79,6 @@ function PostStyler({ style, onStyleChange, onClose }) {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-lg">🎨</span>
           <span className="font-bold text-white text-sm">Style Your Post</span>
         </div>
         <button

@@ -6,6 +6,7 @@ import Tweet from './Tweet';
 import SearchResults from './SearchResults';
 import debateService from '../../services/debateService';
 import DebateCard from '../debates/DebateCard';
+import { Search } from 'lucide-react';
 
 function MainFeed() {
   const { currentUser } = useUser();
@@ -285,7 +286,7 @@ function MainFeed() {
                          transition-all"
             />
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 text-xl">
-              🔍
+              <Search/>
             </span>
             {searchQuery && (
               <button

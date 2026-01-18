@@ -59,7 +59,6 @@ function UserSearch() {
       {/* Header */}
       <div className="px-6 py-5 border-b border-white/10">
         <h2 className="text-2xl font-extrabold flex items-center gap-2">
-          <span>🔍</span>
           <span>Discover People</span>
         </h2>
       </div>

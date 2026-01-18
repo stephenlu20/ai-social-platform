@@ -2,6 +2,7 @@
 import React from 'react';
 import { useUser } from '../../context/UserContext';
 import debateService from '../../services/debateService';
+import { Check } from 'lucide-react';
 
 function DebateCard({ debate, onDebateUpdated }) {
   const { currentUser } = useUser();
@@ -164,7 +165,7 @@ function DebateCard({ debate, onDebateUpdated }) {
                        border border-green-500/50 text-green-300 rounded-xl font-bold
                        transition-all duration-300"
           >
-            ✓ Accept Challenge
+            <Check/> Accept Challenge
           </button>
           <button
             onClick={handleDecline}

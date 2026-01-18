@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import FactCheckBadge from './FactCheckBadge';
 import SourcesList from './SourcesList';
+import { Search } from 'lucide-react';
 
 // #153 - FactCheckModal (detailed results)
 function FactCheckModal({ isOpen, onClose, result, postContent, clickY }) {
@@ -30,7 +31,7 @@ function FactCheckModal({ isOpen, onClose, result, postContent, clickY }) {
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-white/10">
           <h2 className="text-lg font-bold text-white flex items-center gap-2">
-            <span>🔍</span>
+            <Search/>
             Fact Check Details
           </h2>
           <button

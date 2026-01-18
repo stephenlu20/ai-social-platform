@@ -6,6 +6,7 @@ import factCheckService from '../../services/factcheckService';
 import postAssistantService from '../../services/postAssistantService';
 import { getStyleClasses } from './PostStyler';
 import { Sparkles, Loader2 } from 'lucide-react';
+import { CheckCircle, Circle, AlertTriangle, XCircle, HelpCircle, Dot, Edit } from 'lucide-react';
 
 // Compact style options
 const QUICK_FONTS = [
@@ -71,12 +72,12 @@ function FactCheckPreview({ result, onPostAnyway, onEdit, isPosting }) {
 
   const getVerdictIcon = (verdict) => {
     switch (verdict?.toUpperCase()) {
-      case 'VERIFIED': return '✓';
-      case 'LIKELY_TRUE': return '◐';
-      case 'DISPUTED': return '⚠';
-      case 'FALSE': return '✗';
-      case 'UNVERIFIABLE': return '?';
-      default: return '•';
+      case 'VERIFIED': return <CheckCircle/>;
+      case 'LIKELY_TRUE': return <Circle/>;
+      case 'DISPUTED': return <AlertTriangle/>;
+      case 'FALSE': return <XCircle/>;
+      case 'UNVERIFIABLE': return <HelpCircle/>;
+      default: return <Dot/>;
     }
   };
 
@@ -118,7 +119,7 @@ function FactCheckPreview({ result, onPostAnyway, onEdit, isPosting }) {
                      hover:bg-white/20 transition-all
                      disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          ✏️ Edit Post
+          <Edit/> Edit Post
         </button>
         <button
           onClick={onPostAnyway}

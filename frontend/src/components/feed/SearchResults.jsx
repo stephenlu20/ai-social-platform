@@ -1,6 +1,7 @@
 import React from 'react';
 import Tweet from './Tweet';
 import { TrustScoreBadge } from '../trustscore';
+import logo from '../../assets/CondorTransparent.png';
 
 function SearchResults({ 
   searchType, 
@@ -35,7 +36,6 @@ function SearchResults({
   if (!hasAnyResults) {
     return (
       <div className="p-20 text-center text-white/50" style={{ minWidth: '600px' }}>
-        <div className="text-6xl mb-4">🔍</div>
         <div className="text-lg">No results found</div>
         <div className="text-sm text-white/30 mt-2">Try a different search term</div>
       </div>
@@ -61,7 +61,14 @@ function SearchResults({
                 onClick={() => onUserClick && onUserClick(user)}
               >
                 <div className="flex items-start gap-4">
-                  <div className="text-4xl flex-shrink-0">🎨</div>
+                  <div className="w-12 h-12 rounded-xl bg-veritas-blue-dark 
+                                  flex items-center justify-center text-xl">
+                    <img 
+                      src={logo} 
+                      alt="Candor Logo" 
+                      className="w-10 h-10 object-contain"
+                    />
+                    </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-bold text-white text-[15px]">
