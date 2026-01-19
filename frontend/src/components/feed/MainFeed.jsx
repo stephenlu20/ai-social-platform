@@ -328,7 +328,7 @@ function MainFeed({ debateFilterRequest, onDebateUpdated }) {
                        : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
           onClick={() => setActiveTab('yourPosts')}
         >
-          Your Posts
+          My Posts
         </div>
         <div
           className={`flex-1 p-3.5 text-center font-bold cursor-pointer
