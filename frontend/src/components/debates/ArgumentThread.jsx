@@ -45,16 +45,16 @@ function ArgumentThread({ debate, arguments: args }) {
         }
 
         return (
-          <div key={round} className="border border-white/10 rounded-xl overflow-hidden">
-            <div className="bg-white/5 px-4 py-2 border-b border-white/10">
+          <div key={round} className="border border-veritas-pink/20 rounded-xl overflow-hidden">
+            <div className="bg-gradient-to-r from-veritas-purple/10 to-veritas-pink/10 px-4 py-2 border-b border-veritas-pink/20">
               <span className="text-sm font-bold text-white/70">Round {round}</span>
             </div>
 
-            <div className="grid grid-cols-2 divide-x divide-white/10">
+            <div className="grid grid-cols-2 divide-x divide-veritas-pink/20">
               {/* Challenger Column */}
               <div className="p-4">
-                <div className="text-xs font-bold text-blue-400 mb-2">
-                  CHALLENGER
+                <div className="text-xs font-bold text-veritas-coral mb-2 uppercase tracking-wider">
+                  Challenger
                 </div>
                 {challengerArg ? (
                   <div>
@@ -78,8 +78,8 @@ function ArgumentThread({ debate, arguments: args }) {
 
               {/* Defender Column */}
               <div className="p-4">
-                <div className="text-xs font-bold text-red-400 mb-2">
-                  DEFENDER
+                <div className="text-xs font-bold text-veritas-coral mb-2 uppercase tracking-wider">
+                  Defender
                 </div>
                 {defenderArg ? (
                   <div>

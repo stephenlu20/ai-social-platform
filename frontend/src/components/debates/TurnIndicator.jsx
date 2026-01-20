@@ -41,10 +41,10 @@ function TurnIndicator({ debate, currentUserId }) {
 
   if (isMyTurn) {
     return (
-      <div className="px-4 py-3 bg-[#c9a35e]/20 border border-[#c9a35e]/50 rounded-xl mb-4">
+      <div className="px-4 py-3 bg-gradient-to-br from-veritas-purple/20 to-veritas-pink/20 border border-veritas-pink/30 rounded-xl mb-4">
         <div className="flex items-center gap-2">
           <span className="text-2xl">⚔️</span>
-          <span className="text-[#c9a35e] font-bold">Your Turn!</span>
+          <span className="text-veritas-coral font-bold">Your Turn!</span>
           <span className="text-white/60 text-sm ml-2">
             Round {debate.currentRound} of 3
           </span>

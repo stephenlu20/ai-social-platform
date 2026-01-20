@@ -57,9 +57,9 @@ function ArgumentComposer({ debate, currentUserId, onArgumentSubmitted }) {
   };
 
   return (
-    <div className="mt-4 pt-4 border-t border-white/10">
+    <div className="mt-4 pt-4 border-t border-veritas-pink/20">
       <form onSubmit={handleSubmit}>
-        <label className="block text-sm font-bold text-white/80 mb-2">
+        <label className="block text-sm font-bold text-veritas-coral mb-2">
           {isMyTurn ? 'Your Argument' : 'Waiting for opponent...'}
         </label>
 
@@ -73,8 +73,8 @@ function ArgumentComposer({ debate, currentUserId, onArgumentSubmitted }) {
           }
           disabled={!isMyTurn || isSubmitting}
           maxLength={maxChars}
-          className="w-full bg-white/10 border border-white/20 rounded-xl p-4 text-white
-                     placeholder:text-white/30 focus:outline-none focus:border-[#c9a35e]
+          className="w-full bg-white/10 border border-veritas-pink/30 rounded-xl p-4 text-white
+                     placeholder:text-white/30 focus:outline-none focus:border-veritas-pink focus:bg-white/15
                      min-h-[120px] resize-none transition-all
                      disabled:opacity-50 disabled:cursor-not-allowed"
         />
@@ -87,8 +87,8 @@ function ArgumentComposer({ debate, currentUserId, onArgumentSubmitted }) {
           <button
             type="submit"
             disabled={!isMyTurn || !content.trim() || isSubmitting}
-            className="px-6 py-2 bg-gradient-to-r from-[#c9a35e] to-[#a68847]
-                       hover:shadow-lg rounded-xl font-bold text-sm flex items-center gap-2
+            className="px-6 py-2 bg-gradient-to-r from-veritas-pink to-veritas-pink-dark
+                       hover:shadow-lg hover:shadow-veritas-pink/25 rounded-xl font-bold text-sm flex items-center gap-2
                        transition-all duration-300
                        disabled:opacity-50 disabled:cursor-not-allowed"
           >

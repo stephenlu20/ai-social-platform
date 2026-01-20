@@ -55,9 +55,9 @@ function DebateDetailModal({ isOpen, onClose, debate: initialDebate, currentUser
   const getStatusBadge = (status) => {
     const badges = {
       PENDING: { bg: 'bg-yellow-500/20', border: 'border-yellow-500/50', text: 'text-yellow-300', label: 'Pending' },
-      ACTIVE: { bg: 'bg-red-500/20', border: 'border-red-500/50', text: 'text-red-300', label: 'Active' },
-      VOTING: { bg: 'bg-[#c9a35e]/20', border: 'border-[#c9a35e]/50', text: 'text-[#c9a35e]', label: 'Voting' },
-      COMPLETED: { bg: 'bg-green-500/20', border: 'border-green-500/50', text: 'text-green-300', label: 'Completed' },
+      ACTIVE: { bg: 'bg-veritas-pink/20', border: 'border-veritas-pink/30', text: 'text-veritas-coral', label: 'Active' },
+      VOTING: { bg: 'bg-veritas-purple/20', border: 'border-veritas-purple/30', text: 'text-veritas-purple-light', label: 'Voting' },
+      COMPLETED: { bg: 'bg-green-500/20', border: 'border-green-500/30', text: 'text-green-300', label: 'Completed' },
     };
     const badge = badges[status] || badges.PENDING;
 
@@ -69,14 +69,14 @@ function DebateDetailModal({ isOpen, onClose, debate: initialDebate, currentUser
   };
 
   const modalContent = (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
-      <div className="bg-gradient-to-br from-[#1a3a52] to-[#234562] border-2 border-white/20
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+      <div className="bg-gradient-to-br from-[#0f0519] via-[#1a0a2e] to-[#16213e] border-2 border-veritas-pink/30
                       rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col">
         {/* Header */}
-        <div className="p-6 border-b border-white/10 flex-shrink-0">
+        <div className="p-6 border-b border-veritas-pink/20 flex-shrink-0">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <Swords className="w-8 h-8 text-[#c9a35e]" />
+              <Swords className="w-8 h-8 text-veritas-coral" />
               <h2 className="text-2xl font-bold">Debate</h2>
               {getStatusBadge(debate?.status)}
             </div>
@@ -90,19 +90,19 @@ function DebateDetailModal({ isOpen, onClose, debate: initialDebate, currentUser
 
           {/* Topic */}
           <div className="mb-4">
-            <div className="text-xs text-white/50 font-bold mb-1 uppercase tracking-wider">Topic</div>
+            <div className="text-xs text-veritas-coral font-bold mb-1 uppercase tracking-wider">Topic</div>
             <div className="text-white/90 text-lg">{debate?.topic}</div>
           </div>
 
           {/* Participants */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-3">
-              <div className="text-xs text-blue-300 font-bold mb-1">CHALLENGER</div>
+            <div className="bg-gradient-to-br from-veritas-purple/20 to-veritas-pink/10 border border-veritas-pink/30 rounded-xl p-3">
+              <div className="text-xs text-veritas-coral font-bold mb-1 uppercase tracking-wider">Challenger</div>
               <div className="font-bold">{debate?.challenger?.displayName}</div>
               <div className="text-sm text-white/50">@{debate?.challenger?.username}</div>
             </div>
-            <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3">
-              <div className="text-xs text-red-300 font-bold mb-1">DEFENDER</div>
+            <div className="bg-gradient-to-br from-veritas-purple/20 to-veritas-pink/10 border border-veritas-pink/30 rounded-xl p-3">
+              <div className="text-xs text-veritas-coral font-bold mb-1 uppercase tracking-wider">Defender</div>
               <div className="font-bold">{debate?.defender?.displayName}</div>
               <div className="text-sm text-white/50">@{debate?.defender?.username}</div>
             </div>
@@ -113,24 +113,24 @@ function DebateDetailModal({ isOpen, onClose, debate: initialDebate, currentUser
         <div className="flex-1 overflow-y-auto p-6">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin w-8 h-8 border-2 border-[#c9a35e] border-t-transparent rounded-full" />
+              <div className="animate-spin w-8 h-8 border-2 border-veritas-pink border-t-transparent rounded-full" />
             </div>
           ) : (
             <>
               {/* Winner Banner for Completed */}
               {debate?.status === 'COMPLETED' && debate?.winnerId && (
-                <div className="mb-4 p-4 bg-[#c9a35e]/20 border border-[#c9a35e]/50 rounded-xl">
+                <div className="mb-4 p-4 bg-gradient-to-r from-veritas-purple/20 to-veritas-pink/20 border border-veritas-pink/30 rounded-xl">
                   <div className="flex items-center justify-center gap-3">
-                    <Trophy className="w-8 h-8 text-[#c9a35e]" />
+                    <Trophy className="w-8 h-8 text-veritas-coral" />
                     <div className="text-center">
                       <div className="text-sm text-white/60">Winner</div>
-                      <div className="text-xl font-bold text-[#c9a35e]">
+                      <div className="text-xl font-bold text-veritas-coral">
                         {debate.winnerId === debate.challenger?.id
                           ? debate.challenger?.displayName
                           : debate.defender?.displayName}
                       </div>
                     </div>
-                    <Trophy className="w-8 h-8 text-[#c9a35e]" />
+                    <Trophy className="w-8 h-8 text-veritas-coral" />
                   </div>
                 </div>
               )}

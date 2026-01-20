@@ -38,7 +38,8 @@ public class DebateServiceImpl implements DebateService {
                 .orElseThrow(() -> new IllegalArgumentException("Defender not found"));
 
         Debate debate = new Debate(topic, challenger, defender);
-        debate.setStatus(DebateStatus.PENDING);
+        debate.setStatus(DebateStatus.ACTIVE);
+        debate.setWhoseTurn(challenger);
 
         Debate saved = debateRepository.save(debate);
         return DebateDTO.fromEntity(saved);
