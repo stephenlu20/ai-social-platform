@@ -248,16 +248,12 @@ function MainFeed({ refreshTrigger, debateFilterRequest, onDebateUpdated }) {
           } else if (debateFilter === 'voting') {
             debatesToShow = await debateService.getVotingDebates();
           } else if (debateFilter === 'completed') {
-            // For "all debates + completed", we'd need a new backend endpoint
-            // For now, fall back to all active + voting
-            const activeDebates = await debateService.getActiveDebates();
-            const votingDebates = await debateService.getVotingDebates();
-            debatesToShow = [...activeDebates, ...votingDebates];
+            debatesToShow = debateService.getCompletedDebates();
           } else {
-            // 'all' - Load all active and voting debates
             const activeDebates = await debateService.getActiveDebates();
             const votingDebates = await debateService.getVotingDebates();
-            debatesToShow = [...activeDebates, ...votingDebates];
+            const completedDebates = await debateService.getCompletedDebates();
+            debatesToShow = [...activeDebates, ...votingDebates, ...completedDebates];
           }
         }
         
