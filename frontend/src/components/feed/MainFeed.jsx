@@ -30,6 +30,11 @@ function MainFeed({ debateFilterRequest, onDebateUpdated }) {
   const [postPage, setPostPage] = useState(0);
   const [hasMoreUsers, setHasMoreUsers] = useState(false);
   const [hasMorePosts, setHasMorePosts] = useState(false);
+  
+  // Trust score filters
+  const [minTrustScore, setMinTrustScore] = useState('');
+  const [maxTrustScore, setMaxTrustScore] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     if (currentUser) {
@@ -77,7 +82,7 @@ function MainFeed({ debateFilterRequest, onDebateUpdated }) {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery, searchType]);
+  }, [searchQuery, searchType, minTrustScore, maxTrustScore]);
 
   const performSearch = async () => {
     if (!searchQuery.trim() || !currentUser) return;
@@ -94,6 +99,8 @@ function MainFeed({ debateFilterRequest, onDebateUpdated }) {
         searchPromises.push(
           userService.searchUsers({
             query: searchQuery,
+            minTrustScore: minTrustScore ? parseFloat(minTrustScore) : null,
+            maxTrustScore: maxTrustScore ? parseFloat(maxTrustScore) : null,
             page: 0,
             size: 20
           })
@@ -135,6 +142,8 @@ function MainFeed({ debateFilterRequest, onDebateUpdated }) {
     try {
       const response = await userService.searchUsers({
         query: searchQuery,
+        minTrustScore: minTrustScore ? parseFloat(minTrustScore) : null,
+        maxTrustScore: maxTrustScore ? parseFloat(maxTrustScore) : null,
         page: nextPage,
         size: 20
       });
@@ -176,6 +185,9 @@ function MainFeed({ debateFilterRequest, onDebateUpdated }) {
     setSearchActive(false);
     setUserResults([]);
     setPostResults([]);
+    setMinTrustScore('');
+    setMaxTrustScore('');
+    setShowFilters(false);
   };
 
   const loadPosts = async () => {
@@ -229,13 +241,16 @@ function MainFeed({ debateFilterRequest, onDebateUpdated }) {
           } else if (debateFilter === 'voting') {
             debatesToShow = await debateService.getVotingDebates();
           } else if (debateFilter === 'completed') {
-            debatesToShow = await debateService.getCompletedDebates();
+            // For "all debates + completed", we'd need a new backend endpoint
+            // For now, fall back to all active + voting
+            const activeDebates = await debateService.getActiveDebates();
+            const votingDebates = await debateService.getVotingDebates();
+            debatesToShow = [...activeDebates, ...votingDebates];
           } else {
             // 'all' - Load all active and voting debates
             const activeDebates = await debateService.getActiveDebates();
             const votingDebates = await debateService.getVotingDebates();
-            const completedDebates = await debateService.getCompletedDebates();
-            debatesToShow = [...activeDebates, ...votingDebates, ...completedDebates];
+            debatesToShow = [...activeDebates, ...votingDebates];
           }
         }
         
@@ -328,7 +343,7 @@ function MainFeed({ debateFilterRequest, onDebateUpdated }) {
                        : 'text-white/50 hover:text-white/80 hover:bg-white/5'}`}
           onClick={() => setActiveTab('yourPosts')}
         >
-          My Posts
+          Your Posts
         </div>
         <div
           className={`flex-1 p-3.5 text-center font-bold cursor-pointer
@@ -378,34 +393,122 @@ function MainFeed({ debateFilterRequest, onDebateUpdated }) {
           </div>
 
           {searchActive && (
-            <div className="flex gap-2 mt-3">
-              <button
-                onClick={() => setSearchType('all')}
-                className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all
-                           ${searchType === 'all'
-                             ? 'bg-veritas-pink text-white'
-                             : 'bg-white/5 text-white/50 hover:text-white hover:bg-white/10'}`}
-              >
-                All
-              </button>
-              <button
-                onClick={() => setSearchType('users')}
-                className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all
-                           ${searchType === 'users'
-                             ? 'bg-veritas-pink text-white'
-                             : 'bg-white/5 text-white/50 hover:text-white hover:bg-white/10'}`}
-              >
-                Users
-              </button>
-              <button
-                onClick={() => setSearchType('posts')}
-                className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all
-                           ${searchType === 'posts'
-                             ? 'bg-veritas-pink text-white'
-                             : 'bg-white/5 text-white/50 hover:text-white hover:bg-white/10'}`}
-              >
-                Posts
-              </button>
+            <div className="mt-3 space-y-3">
+              {/* Search Type Filters */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setSearchType('all')}
+                  className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all
+                             ${searchType === 'all'
+                               ? 'bg-veritas-pink text-white'
+                               : 'bg-white/5 text-white/50 hover:text-white hover:bg-white/10'}`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setSearchType('users')}
+                  className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all
+                             ${searchType === 'users'
+                               ? 'bg-veritas-pink text-white'
+                               : 'bg-white/5 text-white/50 hover:text-white hover:bg-white/10'}`}
+                >
+                  Users
+                </button>
+                <button
+                  onClick={() => setSearchType('posts')}
+                  className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all
+                             ${searchType === 'posts'
+                               ? 'bg-veritas-pink text-white'
+                               : 'bg-white/5 text-white/50 hover:text-white hover:bg-white/10'}`}
+                >
+                  Posts
+                </button>
+
+                {/* Filters Toggle - Only show when searching users */}
+                {(searchType === 'all' || searchType === 'users') && (
+                  <button
+                    onClick={() => setShowFilters(!showFilters)}
+                    className={`ml-auto px-4 py-2 rounded-lg text-xs font-semibold transition-all flex items-center gap-2
+                               ${showFilters || minTrustScore || maxTrustScore
+                                 ? 'bg-veritas-purple/40 text-white border border-veritas-purple/50'
+                                 : 'bg-white/5 text-white/50 hover:text-white hover:bg-white/10'}`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                    </svg>
+                    Filters
+                    {(minTrustScore || maxTrustScore) && (
+                      <span className="w-2 h-2 bg-veritas-pink rounded-full"></span>
+                    )}
+                  </button>
+                )}
+              </div>
+
+              {/* Trust Score Filter Panel */}
+              {showFilters && (searchType === 'all' || searchType === 'users') && (
+                <div className="p-4 bg-white/5 border border-white/20 rounded-xl">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-bold text-white/70 uppercase tracking-wider">
+                      Trust Score Range
+                    </span>
+                    {(minTrustScore || maxTrustScore) && (
+                      <button
+                        onClick={() => {
+                          setMinTrustScore('');
+                          setMaxTrustScore('');
+                        }}
+                        className="text-xs text-veritas-pink hover:text-veritas-coral transition-colors"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs text-white/50 mb-1">Min Score</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={minTrustScore}
+                        onChange={(e) => setMinTrustScore(e.target.value)}
+                        placeholder="0"
+                        className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2
+                                   text-white text-sm placeholder:text-white/30
+                                   focus:outline-none focus:border-veritas-pink focus:bg-white/15
+                                   transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-white/50 mb-1">Max Score</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={maxTrustScore}
+                        onChange={(e) => setMaxTrustScore(e.target.value)}
+                        placeholder="100"
+                        className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2
+                                   text-white text-sm placeholder:text-white/30
+                                   focus:outline-none focus:border-veritas-pink focus:bg-white/15
+                                   transition-all"
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Visual trust score scale reference */}
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <div className="text-[10px] text-white/40 mb-1">Reference:</div>
+                    <div className="flex items-center justify-between text-[10px] text-white/50">
+                      <span>0 (Unreliable)</span>
+                      <span>50 (Neutral)</span>
+                      <span>100 (Trusted)</span>
+                    </div>
+                    <div className="h-1.5 bg-gradient-to-r from-red-500 via-blue-500 to-emerald-500 rounded-full mt-1"></div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
