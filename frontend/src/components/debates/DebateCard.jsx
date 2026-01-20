@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useUser } from '../../context/UserContext';
 import debateService from '../../services/debateService';
-import { Check, Clock, Swords, Vote, CheckCircle, Trophy, X } from 'lucide-react';
+import { Clock, Swords, Vote, CheckCircle, Trophy } from 'lucide-react';
 import DebateDetailModal from './DebateDetailModal';
 
 function DebateCard({ debate, onDebateUpdated }) {
@@ -11,33 +11,33 @@ function DebateCard({ debate, onDebateUpdated }) {
 
   const getStatusBadge = (status) => {
     const badges = {
-      PENDING: { 
+      PENDING: {
         icon: <Clock className="w-3 h-3" />,
-        bg: 'bg-yellow-500/20', 
-        border: 'border-yellow-500/50', 
-        text: 'text-yellow-300', 
-        label: 'Pending' 
+        bg: 'bg-yellow-500/20',
+        border: 'border-yellow-500/50',
+        text: 'text-yellow-300',
+        label: 'Pending'
       },
-      ACTIVE: { 
+      ACTIVE: {
         icon: <Swords className="w-3 h-3" />,
-        bg: 'bg-red-500/20', 
-        border: 'border-red-500/50', 
-        text: 'text-red-300', 
-        label: 'Active' 
+        bg: 'bg-veritas-pink/20',
+        border: 'border-veritas-pink/30',
+        text: 'text-veritas-coral',
+        label: 'Active'
       },
       VOTING: {
         icon: <Vote className="w-3 h-3" />,
-        bg: 'bg-[#c9a35e]/20',
-        border: 'border-[#c9a35e]/50',
-        text: 'text-[#c9a35e]',
+        bg: 'bg-veritas-purple/20',
+        border: 'border-veritas-purple/30',
+        text: 'text-veritas-purple-light',
         label: 'Voting'
       },
-      COMPLETED: { 
+      COMPLETED: {
         icon: <CheckCircle className="w-3 h-3" />,
-        bg: 'bg-green-500/20', 
-        border: 'border-green-500/50', 
-        text: 'text-green-300', 
-        label: 'Completed' 
+        bg: 'bg-green-500/20',
+        border: 'border-green-500/30',
+        text: 'text-green-300',
+        label: 'Completed'
       }
     };
     const badge = badges[status] || badges.PENDING;
@@ -98,44 +98,44 @@ function DebateCard({ debate, onDebateUpdated }) {
       </div>
 
       <div className="mb-4">
-        <div className="text-white/90 font-semibold mb-2">Topic:</div>
-        <div className="text-white/80 leading-relaxed">{debate.topic}</div>
+        <div className="text-xs text-veritas-coral font-bold mb-2 uppercase tracking-wider">Topic</div>
+        <div className="text-white/90 leading-relaxed">{debate.topic}</div>
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-4">
-        <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-3">
-          <div className="text-xs text-blue-300 font-bold mb-1">CHALLENGER</div>
+        <div className="bg-gradient-to-br from-veritas-purple/20 to-veritas-pink/10 border border-veritas-pink/30 rounded-xl p-3">
+          <div className="text-xs text-veritas-coral font-bold mb-1 uppercase tracking-wider">Challenger</div>
           <div className="font-bold">{debate.challenger?.displayName}</div>
           <div className="text-sm text-white/50">@{debate.challenger?.username}</div>
         </div>
-        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3">
-          <div className="text-xs text-red-300 font-bold mb-1">DEFENDER</div>
+        <div className="bg-gradient-to-br from-veritas-purple/20 to-veritas-pink/10 border border-veritas-pink/30 rounded-xl p-3">
+          <div className="text-xs text-veritas-coral font-bold mb-1 uppercase tracking-wider">Defender</div>
           <div className="font-bold">{debate.defender?.displayName}</div>
           <div className="text-sm text-white/50">@{debate.defender?.username}</div>
         </div>
       </div>
 
       {debate.status === 'ACTIVE' && (
-        <div className="mb-4 p-3 bg-white/5 rounded-xl">
+        <div className="mb-4 p-3 bg-gradient-to-br from-veritas-purple/10 to-veritas-pink/10 border border-veritas-pink/20 rounded-xl">
           <div className="text-sm">
             <span className="text-white/60">Round:</span>{' '}
-            <span className="font-bold text-[#c9a35e]">{debate.currentRound}/3</span>
+            <span className="font-bold text-veritas-coral">{debate.currentRound}/3</span>
           </div>
         </div>
       )}
 
       {debate.status === 'VOTING' && (
         <div className="mb-4 space-y-2">
-          <div className="text-sm font-bold text-white/80 mb-2">Current Votes:</div>
-          
+          <div className="text-sm font-bold text-veritas-coral mb-2">Current Votes:</div>
+
           <div className="relative">
             <div className="flex justify-between text-xs mb-1">
               <span>Challenger</span>
               <span>{percentages.challenger}%</span>
             </div>
             <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-blue-500 transition-all duration-500"
+              <div
+                className="h-full bg-gradient-to-r from-veritas-pink to-veritas-coral transition-all duration-500"
                 style={{ width: `${percentages.challenger}%` }}
               />
             </div>
@@ -147,8 +147,8 @@ function DebateCard({ debate, onDebateUpdated }) {
               <span>{percentages.defender}%</span>
             </div>
             <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-red-500 transition-all duration-500"
+              <div
+                className="h-full bg-gradient-to-r from-veritas-purple to-veritas-pink transition-all duration-500"
                 style={{ width: `${percentages.defender}%` }}
               />
             </div>
@@ -160,8 +160,8 @@ function DebateCard({ debate, onDebateUpdated }) {
               <span>{percentages.tie}%</span>
             </div>
             <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gray-500 transition-all duration-500"
+              <div
+                className="h-full bg-white/30 transition-all duration-500"
                 style={{ width: `${percentages.tie}%` }}
               />
             </div>
@@ -174,12 +174,12 @@ function DebateCard({ debate, onDebateUpdated }) {
       )}
 
       {debate.status === 'COMPLETED' && debate.winnerId && (
-        <div className="mb-4 p-3 bg-[#c9a35e]/20 border border-[#c9a35e]/50 rounded-xl">
+        <div className="mb-4 p-3 bg-gradient-to-br from-veritas-purple/20 to-veritas-pink/20 border border-veritas-pink/30 rounded-xl">
           <div className="text-center">
-            <Trophy className="w-8 h-8 mx-auto mb-2 text-[#c9a35e]" />
-            <div className="font-bold text-[#c9a35e]">
-              Winner: {debate.winnerId === debate.challenger?.id 
-                ? debate.challenger?.displayName 
+            <Trophy className="w-8 h-8 mx-auto mb-2 text-veritas-coral" />
+            <div className="font-bold text-veritas-coral">
+              Winner: {debate.winnerId === debate.challenger?.id
+                ? debate.challenger?.displayName
                 : debate.defender?.displayName}
             </div>
           </div>
