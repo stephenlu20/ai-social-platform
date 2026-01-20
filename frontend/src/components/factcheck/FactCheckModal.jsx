@@ -5,29 +5,26 @@ import SourcesList from './SourcesList';
 import { Search } from 'lucide-react';
 
 // #153 - FactCheckModal (detailed results)
-function FactCheckModal({ isOpen, onClose, result, postContent, clickY }) {
+function FactCheckModal({ isOpen, onClose, result, postContent }) {
   if (!isOpen) return null;
-
-  // Calculate how much to shift from center
-  const centerY = window.innerHeight / 2;
-  const offsetY = clickY ? clickY - centerY : 0;
 
   const hasError = result?.error;
 
   return ReactDOM.createPortal (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 overflow-y-auto"
       onClick={onClose}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm"></div>
 
-      {/* Modal */}
-      <div
-        className="relative bg-[#1a1a2e] border border-white/20 rounded-2xl w-full max-w-lg max-h-[80vh] overflow-hidden shadow-2xl"
-        style={{ transform: `translateY(${offsetY}px)` }}
-        onClick={(e) => e.stopPropagation()}
-      >
+      {/* Modal container - centers content */}
+      <div className="min-h-full flex items-center justify-center p-4">
+        {/* Modal */}
+        <div
+          className="relative bg-[#1a1a2e] border border-white/20 rounded-2xl w-full max-w-lg max-h-[80vh] overflow-hidden shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-white/10">
           <h2 className="text-lg font-bold text-white flex items-center gap-2">
@@ -124,6 +121,7 @@ function FactCheckModal({ isOpen, onClose, result, postContent, clickY }) {
               )}
             </>
           )}
+        </div>
         </div>
       </div>
     </div>,

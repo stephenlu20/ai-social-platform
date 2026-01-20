@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import userService from '../../services/userService';
 
 /**
  * Trust Score Tooltip - shows breakdown on hover
+ * Uses portal and calculates position to stay within viewport
  */
-function TrustScoreTooltip({ userId, score, tierInfo }) {
+function TrustScoreTooltip({ userId, score, tierInfo, triggerRect }) {
   const [breakdown, setBreakdown] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -24,17 +26,69 @@ function TrustScoreTooltip({ userId, score, tierInfo }) {
     fetchBreakdown();
   }, [userId]);
 
-  return (
+  // Calculate position immediately from triggerRect (no effect needed)
+  const tooltipWidth = 256;
+  const tooltipHeight = 200; // Approximate height
+  const margin = 8;
+  const arrowSize = 8;
+
+  let top, left;
+  let showArrowOnTop = false;
+
+  // Vertical positioning - prefer below to avoid going off top of screen
+  if (triggerRect.bottom + tooltipHeight + margin + arrowSize < window.innerHeight) {
+    // Position below
+    top = triggerRect.bottom + arrowSize;
+    showArrowOnTop = true;
+  } else if (triggerRect.top - tooltipHeight - margin - arrowSize > 0) {
+    // Position above
+    top = triggerRect.top - tooltipHeight - arrowSize;
+    showArrowOnTop = false;
+  } else {
+    // Default to below if neither fits well
+    top = triggerRect.bottom + arrowSize;
+    showArrowOnTop = true;
+  }
+
+  // Horizontal positioning - center, but clamp to viewport
+  const centerX = triggerRect.left + triggerRect.width / 2;
+  left = centerX - tooltipWidth / 2;
+
+  // Clamp horizontal position
+  if (left < margin) {
+    left = margin;
+  } else if (left + tooltipWidth > window.innerWidth - margin) {
+    left = window.innerWidth - margin - tooltipWidth;
+  }
+
+  // Calculate arrow position relative to tooltip
+  const arrowLeft = Math.max(16, Math.min(tooltipWidth - 16, centerX - left));
+
+  const style = {
+    position: 'fixed',
+    top: `${top}px`,
+    left: `${left}px`,
+    width: `${tooltipWidth}px`,
+    zIndex: 9999,
+  };
+
+  const tooltipContent = (
     <div
-      className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2
-                 w-64 p-3 rounded-xl shadow-xl
-                 bg-[#1a1a2e] border border-white/20
-                 animate-fadeIn"
+      className="p-3 rounded-xl shadow-xl bg-[#1a1a2e] border border-white/20"
+      style={style}
     >
       {/* Arrow */}
-      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2
-                      w-0 h-0 border-l-8 border-r-8 border-t-8
-                      border-l-transparent border-r-transparent border-t-white/20" />
+      <div
+        className="absolute w-0 h-0 border-l-8 border-r-8 border-l-transparent border-r-transparent"
+        style={{
+          left: `${arrowLeft}px`,
+          transform: 'translateX(-50%)',
+          ...(showArrowOnTop
+            ? { top: '-8px', borderBottom: '8px solid rgba(255,255,255,0.2)' }
+            : { bottom: '-8px', borderTop: '8px solid rgba(255,255,255,0.2)' }
+          ),
+        }}
+      />
 
       {/* Header */}
       <div className="flex items-center justify-between mb-3 pb-2 border-b border-white/10">
@@ -80,6 +134,8 @@ function TrustScoreTooltip({ userId, score, tierInfo }) {
       )}
     </div>
   );
+
+  return ReactDOM.createPortal(tooltipContent, document.body);
 }
 
 export default TrustScoreTooltip;
