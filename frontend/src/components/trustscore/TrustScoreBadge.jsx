@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import TrustScoreTooltip from './TrustScoreTooltip';
 import { CheckCircle, Circle, CircleDot, AlertTriangle, XCircle } from 'lucide-react';
 
@@ -8,6 +8,8 @@ import { CheckCircle, Circle, CircleDot, AlertTriangle, XCircle } from 'lucide-r
  */
 function TrustScoreBadge({ score, size = 'md', showTooltip = true, userId = null }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [triggerRect, setTriggerRect] = useState(null);
+  const badgeRef = useRef(null);
 
   const numScore = typeof score === 'number' ? score : parseFloat(score) || 50;
 
@@ -94,11 +96,24 @@ function TrustScoreBadge({ score, size = 'md', showTooltip = true, userId = null
     xl: 'w-5 h-5',
   };
 
+  const handleMouseEnter = () => {
+    if (badgeRef.current) {
+      setTriggerRect(badgeRef.current.getBoundingClientRect());
+    }
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setTriggerRect(null);
+  };
+
   return (
     <div
+      ref={badgeRef}
       className="relative inline-block"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <div
         className={`
@@ -122,8 +137,8 @@ function TrustScoreBadge({ score, size = 'md', showTooltip = true, userId = null
       </div>
 
       {/* Tooltip on hover */}
-      {showTooltip && isHovered && userId && (
-        <TrustScoreTooltip userId={userId} score={numScore} tierInfo={tierInfo} />
+      {showTooltip && isHovered && userId && triggerRect && (
+        <TrustScoreTooltip userId={userId} score={numScore} tierInfo={tierInfo} triggerRect={triggerRect} />
       )}
     </div>
   );
