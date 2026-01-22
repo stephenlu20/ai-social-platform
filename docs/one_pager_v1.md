@@ -1,7 +1,7 @@
 # One-Pager (V1)
 
 ## Product Vision
-Veritas is an AI-augmented social media platform that allows users to post short messages, interact in threaded conversations, and participate in structured debates. AI agents provide fact-checking, credibility assessment, and trust scoring, helping users navigate information reliability while fostering engagement and meaningful discussion.
+Candor is an AI-augmented social media platform that allows users to post short messages, interact in threaded conversations, and participate in structured debates. AI agents provide fact-checking, credibility assessment, and trust scoring, helping users navigate information reliability while fostering engagement and meaningful discussion.
 
 The goal is to integrate social interaction and AI-supported truth verification in a seamless, user-centric platform.
 

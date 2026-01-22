@@ -1,8 +1,8 @@
-# Veritas
+# Candor
 
 An AI-augmented micro-social platform for short-form discussion, fact-checking, and structured debate.
 
-Veritas is a Twitter-style social media application built to explore how AI agents can augment trust, credibility, and discourse in online conversations. Users can post short messages, reply in threads, participate in structured debates, and view AI-generated fact-checks and trust signals, while retaining full control over what they publish.
+Candor is a Twitter-style social media application built to explore how AI agents can augment trust, credibility, and discourse in online conversations. Users can post short messages, reply in threads, participate in structured debates, and view AI-generated fact-checks and trust signals, while retaining full control over what they publish.
 
 This project is intentionally scoped as a V1 demonstration platform: lightweight, readable, and focused on core social interactions plus AI-powered insights.
 
@@ -140,7 +140,7 @@ Setup instructions may vary depending on environment.
 
 ## Disclaimer
 
-Veritas is a demonstration and learning project. AI-generated fact checks and trust scores are heuristic and should not be interpreted as authoritative judgments.
+Candor is a demonstration and learning project. AI-generated fact checks and trust scores are heuristic and should not be interpreted as authoritative judgments.
 
 ---
 

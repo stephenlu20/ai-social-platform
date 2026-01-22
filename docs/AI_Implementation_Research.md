@@ -1,7 +1,7 @@
-# AI Implementation Research for Veritas Platform
+# AI Implementation Research for Candor Platform
 
 > **Research Date:** January 2026
-> **Project:** Veritas AI-Social Platform
+> **Project:** Candor AI-Social Platform
 > **Purpose:** Best practices for implementing AI into a 3-tier web application, with focus on fact-checking capabilities
 
 ---
@@ -12,19 +12,19 @@
 2. [AI Architecture in 3-Tier Web Applications](#ai-architecture-in-3-tier-web-applications)
 3. [AI Models for Fact-Checking](#ai-models-for-fact-checking)
 4. [Java/Spring Boot Integration](#javaspring-boot-integration)
-5. [Veritas-Specific AI Implementation Plan](#veritas-specific-ai-implementation-plan)
+5. [Candor-Specific AI Implementation Plan](#Candor-specific-ai-implementation-plan)
 6. [Recommendations](#recommendations)
 
 ---
 
 ## Executive Summary
 
-This document outlines the research findings for implementing AI capabilities into the Veritas platform, specifically focusing on:
+This document outlines the research findings for implementing AI capabilities into the Candor platform, specifically focusing on:
 
 - **Architectural best practices** for AI integration in 3-tier web applications
 - **Model selection** for fact-checking use cases
 - **Java/Spring Boot implementation patterns** using Spring AI
-- **Veritas-specific AI features** identified from the project specification
+- **Candor-specific AI features** identified from the project specification
 
 **Key Recommendation:** Use **Spring AI with Claude Sonnet 4** as the primary integration, implementing a dedicated AI service layer with async processing and Redis caching for optimal performance and cost management.
 
@@ -116,7 +116,7 @@ return response;
 | **Gemini 2.0 Flash** | Google | ~$0.35-0.70 | ~$1.05-2.10 | 1M | Fast, cost-effective first-pass |
 | **Llama 4** | Meta | Free (infra cost) | Free (infra cost) | Large | Self-hosted, privacy-critical |
 
-### Recommended Models for Veritas Fact-Checking
+### Recommended Models for Candor Fact-Checking
 
 | Use Case | Recommended Model | Rationale |
 |----------|------------------|-----------|
@@ -388,9 +388,9 @@ public class AsyncFactCheckService {
 
 ---
 
-## Veritas-Specific AI Implementation Plan
+## Candor-Specific AI Implementation Plan
 
-Based on the project specification, Veritas requires three distinct AI agent capabilities:
+Based on the project specification, Candor requires three distinct AI agent capabilities:
 
 ### 1. Pre-Publish Fact Check Agent
 
@@ -513,7 +513,7 @@ public enum FactCheckStatus {
 
 ## Recommendations
 
-### Architecture Recommendation for Veritas
+### Architecture Recommendation for Candor
 
 ```
 [React Frontend]
@@ -581,7 +581,7 @@ public enum FactCheckStatus {
 
 ## Summary
 
-For the Veritas platform, the recommended approach is:
+For the Candor platform, the recommended approach is:
 
 1. **Primary Model:** Claude Sonnet 4 via Spring AI
 2. **Architecture:** Dedicated AI service layer within Spring Boot

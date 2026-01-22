@@ -1,7 +1,7 @@
 # Technical Specification (V1)
 
 ## 1. System Architecture
-Veritas follows a **three-tier architecture**:
+Candor follows a **three-tier architecture**:
 
 React Frontend -> Spring Boot REST API -> SQL Database
 
